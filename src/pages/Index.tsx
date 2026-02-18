@@ -1,24 +1,75 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { motion } from "framer-motion";
 import SplashScreen from "@/components/SplashScreen";
 import VehicleSelector from "@/components/VehicleSelector";
 import SearchBar from "@/components/SearchBar";
+import SearchResults from "@/components/SearchResults";
 import { useVehicleData } from "@/hooks/useVehicleData";
 import { getRandomCarImage } from "@/lib/classicCarImages";
 import { Flame, Gauge, Wrench } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+
+interface RepairResult {
+  repairGuide: string;
+  commonCauses: string[];
+  estimatedDifficulty: string;
+  forumDiscussions: { title: string; summary: string; community: string }[];
+  youtubeSearches: string[];
+  partsNeeded: string[];
+}
 
 const Index = () => {
   const [splashDone, setSplashDone] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchResult, setSearchResult] = useState<RepairResult | null>(null);
+  const [lastSearchedIssue, setLastSearchedIssue] = useState("");
   const vehicleData = useVehicleData();
   const heroImage = useMemo(() => getRandomCarImage(), []);
+  const resultsRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
 
   const vehicleLabel = [vehicleData.year, vehicleData.make, vehicleData.model, vehicleData.trim]
     .filter(Boolean)
     .join(" ");
 
-  const handleSearch = (query: string) => {
-    // Will connect to Perplexity AI later
-    console.log("Searching:", query, "for", vehicleLabel);
+  const handleSearch = async (query: string) => {
+    setIsSearching(true);
+    setSearchResult(null);
+    setLastSearchedIssue(query);
+
+    try {
+      const { data, error } = await supabase.functions.invoke("repair-search", {
+        body: { vehicle: vehicleLabel, issue: query },
+      });
+
+      if (error) throw error;
+
+      if (data?.error) {
+        toast({
+          title: "Search Error",
+          description: data.error,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (data?.success && data?.data) {
+        setSearchResult(data.data);
+        setTimeout(() => {
+          resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 100);
+      }
+    } catch (err) {
+      console.error("Search error:", err);
+      toast({
+        title: "Search Failed",
+        description: "Could not connect to the AI repair service. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSearching(false);
+    }
   };
 
   if (!splashDone) {
@@ -75,47 +126,72 @@ const Index = () => {
               isVehicleSelected={!!vehicleData.isVehicleSelected}
               vehicleLabel={vehicleLabel}
               onSearch={handleSearch}
+              isSearching={isSearching}
             />
           </motion.div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                icon: Wrench,
-                title: "AI Repair Guides",
-                desc: "Get step-by-step repair instructions powered by AI, tailored to your exact vehicle.",
-              },
-              {
-                icon: Flame,
-                title: "Community Insights",
-                desc: "Find forum discussions and peer advice from classic car enthusiasts with similar issues.",
-              },
-              {
-                icon: Gauge,
-                title: "Video Tutorials",
-                desc: "Watch relevant YouTube repair videos matched to your vehicle and concern.",
-              },
-            ].map(({ icon: Icon, title, desc }, i) => (
-              <motion.div
-                key={title}
-                className="p-6 rounded-lg bg-card border border-border hover:border-primary/40 transition-colors group"
-                initial={{ y: 40, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.6 + i * 0.15 }}
-              >
-                <Icon className="w-10 h-10 text-primary mb-4 group-hover:scale-110 transition-transform" />
-                <h3 className="font-heading text-xl font-bold uppercase mb-2">{title}</h3>
-                <p className="text-muted-foreground">{desc}</p>
-              </motion.div>
-            ))}
+      {/* Search Results */}
+      {(isSearching || searchResult) && (
+        <section className="py-10 px-4" ref={resultsRef}>
+          <div className="container mx-auto">
+            {isSearching ? (
+              <div className="flex flex-col items-center justify-center py-20 space-y-4">
+                <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+                <p className="font-condensed text-muted-foreground uppercase tracking-wider">
+                  Consulting the mechanic AI...
+                </p>
+              </div>
+            ) : searchResult ? (
+              <SearchResults
+                vehicle={vehicleLabel}
+                issue={lastSearchedIssue}
+                result={searchResult}
+              />
+            ) : null}
           </div>
-        </div>
-      </section>
+        </section>
+      )}
+
+      {/* Features Section */}
+      {!searchResult && !isSearching && (
+        <section className="py-20 px-4">
+          <div className="container mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {[
+                {
+                  icon: Wrench,
+                  title: "AI Repair Guides",
+                  desc: "Get step-by-step repair instructions powered by AI, tailored to your exact vehicle.",
+                },
+                {
+                  icon: Flame,
+                  title: "Community Insights",
+                  desc: "Find forum discussions and peer advice from classic car enthusiasts with similar issues.",
+                },
+                {
+                  icon: Gauge,
+                  title: "Video Tutorials",
+                  desc: "Watch relevant YouTube repair videos matched to your vehicle and concern.",
+                },
+              ].map(({ icon: Icon, title, desc }, i) => (
+                <motion.div
+                  key={title}
+                  className="p-6 rounded-lg bg-card border border-border hover:border-primary/40 transition-colors group"
+                  initial={{ y: 40, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.6 + i * 0.15 }}
+                >
+                  <Icon className="w-10 h-10 text-primary mb-4 group-hover:scale-110 transition-transform" />
+                  <h3 className="font-heading text-xl font-bold uppercase mb-2">{title}</h3>
+                  <p className="text-muted-foreground">{desc}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   );
 };

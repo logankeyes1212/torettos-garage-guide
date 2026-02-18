@@ -3,8 +3,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Wrench, MessageSquare, Youtube, AlertTriangle, ChevronDown, ChevronUp, Package } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
+interface RepairGuideObject {
+  steps?: string[];
+  toolsNeeded?: string[];
+  safetyWarnings?: string[];
+  [key: string]: unknown;
+}
+
 interface RepairResult {
-  repairGuide: string;
+  repairGuide: string | RepairGuideObject;
   commonCauses: string[];
   estimatedDifficulty: string;
   forumDiscussions: { title: string; summary: string; community: string }[];
@@ -23,6 +30,52 @@ const difficultyColor: Record<string, string> = {
   Intermediate: "bg-yellow-900/50 text-yellow-400 border-yellow-700",
   Advanced: "bg-orange-900/50 text-orange-400 border-orange-700",
   "Professional Only": "bg-red-900/50 text-red-400 border-red-700",
+};
+
+// Safely render the repair guide — AI may return a string or a structured object
+const renderRepairGuide = (guide: string | RepairGuideObject) => {
+  if (!guide) return null;
+
+  if (typeof guide === "string") {
+    return <p className="whitespace-pre-wrap">{guide}</p>;
+  }
+
+  return (
+    <div className="space-y-4">
+      {Array.isArray(guide.safetyWarnings) && guide.safetyWarnings.length > 0 && (
+        <div>
+          <p className="font-semibold text-destructive mb-1 uppercase text-sm tracking-wide">⚠ Safety Warnings</p>
+          <ul className="list-disc list-inside space-y-1">
+            {guide.safetyWarnings.map((w, i) => <li key={i}>{w}</li>)}
+          </ul>
+        </div>
+      )}
+      {Array.isArray(guide.toolsNeeded) && guide.toolsNeeded.length > 0 && (
+        <div>
+          <p className="font-semibold text-foreground mb-1 uppercase text-sm tracking-wide">Tools Needed</p>
+          <ul className="list-disc list-inside space-y-1">
+            {guide.toolsNeeded.map((t, i) => <li key={i}>{t}</li>)}
+          </ul>
+        </div>
+      )}
+      {Array.isArray(guide.steps) && guide.steps.length > 0 && (
+        <div>
+          <p className="font-semibold text-foreground mb-2 uppercase text-sm tracking-wide">Steps</p>
+          <ol className="list-decimal list-inside space-y-2">
+            {guide.steps.map((s, i) => <li key={i}>{s}</li>)}
+          </ol>
+        </div>
+      )}
+      {Object.entries(guide)
+        .filter(([k, v]) => !["steps", "toolsNeeded", "safetyWarnings"].includes(k) && typeof v === "string")
+        .map(([k, v]) => (
+          <div key={k}>
+            <p className="font-semibold text-foreground mb-1 uppercase text-sm tracking-wide">{k}</p>
+            <p>{v as string}</p>
+          </div>
+        ))}
+    </div>
+  );
 };
 
 const SearchResults = ({ vehicle, issue, result }: SearchResultsProps) => {
@@ -83,14 +136,15 @@ const SearchResults = ({ vehicle, issue, result }: SearchResultsProps) => {
         <AnimatePresence>
           {guideExpanded && (
             <motion.div
+              key="guide"
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.3 }}
               className="overflow-hidden"
             >
-              <div className="px-5 pb-5 text-muted-foreground whitespace-pre-wrap leading-relaxed border-t border-border pt-4">
-                {result.repairGuide}
+              <div className="px-5 pb-5 text-muted-foreground leading-relaxed border-t border-border pt-4 space-y-3">
+                {renderRepairGuide(result.repairGuide)}
               </div>
             </motion.div>
           )}

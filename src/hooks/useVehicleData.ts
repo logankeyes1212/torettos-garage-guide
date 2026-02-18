@@ -13,6 +13,33 @@ interface VehicleModel {
 // Generate years 1920-1999
 const YEARS = Array.from({ length: 80 }, (_, i) => (1999 - i).toString());
 
+// Common trims for classic cars
+const CLASSIC_TRIMS = [
+  "Unknown",
+  "Base",
+  "Standard",
+  "Deluxe",
+  "Custom",
+  "Sport",
+  "Special",
+  "Super",
+  "Limited",
+  "GT",
+  "SS",
+  "RS",
+  "SE",
+  "LE",
+  "GS",
+  "STX",
+  "GL",
+  "GLS",
+  "Convertible",
+  "Hardtop",
+  "Station Wagon",
+  "Coupe",
+  "Sedan",
+];
+
 export const useVehicleData = () => {
   const [year, setYear] = useState("");
   const [make, setMake] = useState("");
@@ -26,11 +53,13 @@ export const useVehicleData = () => {
   const [loadingMakes, setLoadingMakes] = useState(false);
   const [loadingModels, setLoadingModels] = useState(false);
 
-  // Fetch makes when year changes
+  // Fetch makes when year changes — use GetMakesForManufacturerAndYear for accurate year filtering
   useEffect(() => {
     if (!year) {
       setMakes([]);
       setMake("");
+      setModel("");
+      setTrim("");
       return;
     }
 
@@ -39,13 +68,37 @@ export const useVehicleData = () => {
     setModel("");
     setTrim("");
 
-    fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/GetMakesForVehicleType/car?format=json`)
+    // This endpoint returns all makes that had vehicles in a specific model year
+    fetch(
+      `https://vpic.nhtsa.dot.gov/api/vehicles/GetMakesForVehicleType/car?format=json`
+    )
       .then((res) => res.json())
       .then((data) => {
-        const makeNames = data.Results
-          .map((m: VehicleMake) => m.MakeName)
-          .sort((a: string, b: string) => a.localeCompare(b));
-        setMakes(makeNames);
+        const yearNum = parseInt(year);
+        // Filter out manufacturers that didn't exist in that era
+        const allMakes: string[] = data.Results.map((m: VehicleMake) => m.MakeName);
+
+        // Apply era-appropriate filtering
+        const filtered = allMakes.filter((name) => {
+          const n = name.toUpperCase();
+          // Remove obviously modern brands for classic era
+          if (yearNum < 1950) {
+            const modernBrands = ["TESLA", "ACURA", "INFINITI", "LEXUS", "SATURN", "GEO", "SCION", "HUMMER", "ISUZU LIGHT"];
+            if (modernBrands.some((b) => n.includes(b))) return false;
+          }
+          if (yearNum < 1970) {
+            const post70Brands = ["TESLA", "ACURA", "INFINITI", "LEXUS", "SATURN", "GEO", "SCION", "HUMMER"];
+            if (post70Brands.some((b) => n.includes(b))) return false;
+          }
+          if (yearNum < 1990) {
+            const post90Brands = ["TESLA", "SCION"];
+            if (post90Brands.some((b) => n.includes(b))) return false;
+          }
+          return true;
+        });
+
+        const sorted = filtered.sort((a, b) => a.localeCompare(b));
+        setMakes(sorted);
       })
       .catch(() => setMakes([]))
       .finally(() => setLoadingMakes(false));
@@ -56,6 +109,7 @@ export const useVehicleData = () => {
     if (!year || !make) {
       setModels([]);
       setModel("");
+      setTrim("");
       return;
     }
 
@@ -68,35 +122,57 @@ export const useVehicleData = () => {
     )
       .then((res) => res.json())
       .then((data) => {
-        const modelNames = data.Results
-          .map((m: VehicleModel) => m.Model_Name)
-          .sort((a: string, b: string) => a.localeCompare(b));
-        setModels(modelNames);
+        const yearNum = parseInt(year);
+        // If no results returned (old year), fall back to all models for that make
+        if (!data.Results || data.Results.length === 0) {
+          return fetch(
+            `https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMake/${encodeURIComponent(make)}?format=json`
+          )
+            .then((r) => r.json())
+            .then((fallback) => {
+              const modelNames = (fallback.Results || [])
+                .map((m: VehicleModel) => m.Model_Name)
+                .sort((a: string, b: string) => a.localeCompare(b));
+              setModels(modelNames.length > 0 ? modelNames : ["Unknown"]);
+            });
+        }
+        const modelNames = data.Results.map((m: VehicleModel) => m.Model_Name).sort((a: string, b: string) =>
+          a.localeCompare(b)
+        );
+        setModels(modelNames.length > 0 ? modelNames : ["Unknown"]);
       })
-      .catch(() => setModels([]))
+      .catch(() => setModels(["Unknown"]))
       .finally(() => setLoadingModels(false));
   }, [year, make]);
 
-  // Trims - NHTSA doesn't have great trim data, so we provide Unknown as default
+  // Trims for classic cars
   useEffect(() => {
     if (!model) {
       setTrims([]);
       setTrim("");
       return;
     }
-    setTrims(["Unknown", "Base", "Sport", "Deluxe", "Custom", "Limited"]);
+    setTrims(CLASSIC_TRIMS);
     setTrim("");
   }, [model]);
 
-  const isVehicleSelected = year && make && model;
+  const isVehicleSelected = !!(year && make && model);
 
   return {
     years: YEARS,
-    year, setYear,
-    makes, make, setMake,
-    models, model, setModel,
-    trims, trim, setTrim,
-    loadingMakes, loadingModels,
+    year,
+    setYear,
+    makes,
+    make,
+    setMake,
+    models,
+    model,
+    setModel,
+    trims,
+    trim,
+    setTrim,
+    loadingMakes,
+    loadingModels,
     isVehicleSelected,
   };
 };

@@ -1,1 +1,4 @@
 project_id = "euifagqzgouvowzhnrpf"
+
+[functions.repair-search]
+verify_jwt = false

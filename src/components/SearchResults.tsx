@@ -10,6 +10,19 @@ interface RepairGuideObject {
   [key: string]: unknown;
 }
 
+interface PartListing {
+  retailer: string;
+  url: string;
+  price: string;
+  type: "OEM" | "Aftermarket";
+  brand?: string;
+}
+
+interface Part {
+  name: string;
+  listings: PartListing[];
+}
+
 interface RepairResult {
   repairGuide: string | RepairGuideObject;
   commonCauses: string[];
@@ -17,6 +30,7 @@ interface RepairResult {
   forumDiscussions: { title: string; summary: string; community: string }[];
   youtubeSearches: string[];
   partsNeeded: string[];
+  parts?: Part[];
 }
 
 interface SearchResultsProps {
@@ -129,7 +143,7 @@ const SearchResults = ({ vehicle, issue, result }: SearchResultsProps) => {
         >
           <div className="flex items-center gap-2">
             <Wrench className="w-5 h-5 text-primary" />
-            <h3 className="font-heading text-lg uppercase tracking-wide">AI Repair Guide</h3>
+            <h3 className="font-heading text-lg uppercase tracking-wide">Toretto's Repair Guide</h3>
           </div>
           {guideExpanded ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
         </button>
@@ -151,8 +165,71 @@ const SearchResults = ({ vehicle, issue, result }: SearchResultsProps) => {
         </AnimatePresence>
       </div>
 
-      {/* Parts Needed */}
-      {result.partsNeeded?.length > 0 && (
+      {/* Parts — structured OEM/Aftermarket */}
+      {result.parts && result.parts.length > 0 && (
+        <div className="bg-card border border-border rounded-lg p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <Package className="w-5 h-5 text-primary" />
+            <h3 className="font-heading text-lg uppercase tracking-wide">Parts You May Need</h3>
+          </div>
+          <div className="space-y-5">
+            {result.parts.map((part, i) => {
+              const oemListings = part.listings?.filter(l => l.type === "OEM") ?? [];
+              const aftermarketListings = part.listings?.filter(l => l.type === "Aftermarket") ?? [];
+              return (
+                <div key={i} className="border border-border rounded-lg overflow-hidden">
+                  <div className="bg-secondary/60 px-4 py-2 border-b border-border">
+                    <p className="font-heading uppercase tracking-wide text-foreground">{part.name}</p>
+                  </div>
+                  <div className="p-4 space-y-3">
+                    {oemListings.length > 0 && (
+                      <div>
+                        <p className="text-xs font-condensed uppercase tracking-widest text-primary mb-2">OEM / Dealer</p>
+                        <div className="space-y-1">
+                          {oemListings.map((l, j) => (
+                            <a
+                              key={j}
+                              href={l.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center justify-between gap-3 px-3 py-2 bg-secondary/30 border border-border rounded hover:border-primary/50 hover:bg-secondary transition-colors group"
+                            >
+                              <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors font-condensed">{l.retailer}{l.brand ? ` — ${l.brand}` : ""}</span>
+                              <span className="text-sm font-bold text-primary shrink-0">{l.price}</span>
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {aftermarketListings.length > 0 && (
+                      <div>
+                        <p className="text-xs font-condensed uppercase tracking-widest text-muted-foreground mb-2">Aftermarket</p>
+                        <div className="space-y-1">
+                          {aftermarketListings.map((l, j) => (
+                            <a
+                              key={j}
+                              href={l.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center justify-between gap-3 px-3 py-2 bg-secondary/30 border border-border rounded hover:border-primary/50 hover:bg-secondary transition-colors group"
+                            >
+                              <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors font-condensed">{l.retailer}{l.brand ? ` — ${l.brand}` : ""}</span>
+                              <span className="text-sm font-bold text-foreground shrink-0">{l.price}</span>
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Fallback plain parts list if structured parts not available */}
+      {(!result.parts || result.parts.length === 0) && result.partsNeeded?.length > 0 && (
         <div className="bg-card border border-border rounded-lg p-5">
           <div className="flex items-center gap-2 mb-3">
             <Package className="w-5 h-5 text-primary" />

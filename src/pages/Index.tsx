@@ -1,11 +1,11 @@
-import { useState, useMemo, useRef } from "react";
+import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import SplashScreen from "@/components/SplashScreen";
 import VehicleSelector from "@/components/VehicleSelector";
 import SearchBar from "@/components/SearchBar";
 import SearchResults from "@/components/SearchResults";
 import { useVehicleData } from "@/hooks/useVehicleData";
-import { getRandomCarImage } from "@/lib/classicCarImages";
+import heroImage from "@/assets/charger-burnout-hero.jpg";
 import { Flame, Gauge, Wrench } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -46,7 +46,7 @@ const Index = () => {
   const [searchResult, setSearchResult] = useState<RepairResult | null>(null);
   const [lastSearchedIssue, setLastSearchedIssue] = useState("");
   const vehicleData = useVehicleData();
-  const heroImage = useMemo(() => getRandomCarImage(), []);
+  // heroImage imported as static asset above
   const resultsRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 

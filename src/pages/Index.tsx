@@ -10,13 +10,34 @@ import { Flame, Gauge, Wrench } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
+interface RepairGuideObject {
+  steps?: string[];
+  toolsNeeded?: string[];
+  safetyWarnings?: string[];
+  [key: string]: unknown;
+}
+
+interface PartListing {
+  retailer: string;
+  url: string;
+  price: string;
+  type: "OEM" | "Aftermarket";
+  brand?: string;
+}
+
+interface Part {
+  name: string;
+  listings: PartListing[];
+}
+
 interface RepairResult {
-  repairGuide: string;
+  repairGuide: string | RepairGuideObject;
   commonCauses: string[];
   estimatedDifficulty: string;
   forumDiscussions: { title: string; summary: string; community: string }[];
   youtubeSearches: string[];
   partsNeeded: string[];
+  parts?: Part[];
 }
 
 const Index = () => {

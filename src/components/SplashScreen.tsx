@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import chargerBurnout from "@/assets/charger-splash.png";
 
 const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
   const [show, setShow] = useState(true);
@@ -73,34 +74,48 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
             ))}
           </div>
 
-          {/* Car silhouette - shaking */}
+          {/* Charger burnout image — shaking */}
           <motion.div
-            className="relative z-10"
-            animate={{ x: [-2, 3, -3, 2, -1, 0] }}
-            transition={{ duration: 0.15, repeat: Infinity }}
+            className="relative z-10 w-full max-w-2xl px-4"
+            animate={{ x: [-3, 4, -4, 3, -2, 0] }}
+            transition={{ duration: 0.12, repeat: Infinity }}
           >
-            <div className="text-center">
-              {/* Car emoji as placeholder for silhouette */}
-              <motion.div
-                className="text-[120px] md:text-[180px] leading-none select-none"
-                initial={{ x: -100, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
-              >
-                🏎️
-              </motion.div>
+            <motion.img
+              src={chargerBurnout}
+              alt="1970 Dodge Charger burnout"
+              className="w-full h-auto drop-shadow-[0_0_60px_hsl(12,90%,50%,0.6)] select-none"
+              initial={{ x: -200, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+            />
 
-              {/* Tire marks */}
-              <motion.div
-                className="flex justify-center gap-8 -mt-4"
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: 1 }}
-                transition={{ delay: 0.5, duration: 1 }}
-              >
-                <div className="w-20 h-1 bg-gradient-to-r from-muted-foreground/50 to-transparent rounded-full" />
-                <div className="w-20 h-1 bg-gradient-to-r from-muted-foreground/50 to-transparent rounded-full" />
-              </motion.div>
+            {/* Extra animated smoke at tire base */}
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full pointer-events-none">
+              {[...Array(5)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute bottom-6 rounded-full bg-white/20 blur-2xl"
+                  style={{
+                    left: `${40 + i * 4}%`,
+                    width: `${80 + i * 20}px`,
+                    height: `${60 + i * 15}px`,
+                  }}
+                  animate={{ y: [0, -180], opacity: [0.7, 0], scale: [1, 2.5] }}
+                  transition={{ duration: 1.5 + i * 0.2, delay: i * 0.2, repeat: Infinity }}
+                />
+              ))}
             </div>
+
+            {/* Tire marks */}
+            <motion.div
+              className="flex justify-center gap-12 mt-1"
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ delay: 0.6, duration: 1.2 }}
+            >
+              <div className="w-24 h-1.5 bg-gradient-to-l from-muted-foreground/60 to-transparent rounded-full" />
+              <div className="w-24 h-1.5 bg-gradient-to-l from-muted-foreground/60 to-transparent rounded-full" />
+            </motion.div>
           </motion.div>
 
           {/* Title */}

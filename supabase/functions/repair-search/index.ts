@@ -23,21 +23,24 @@ Always respond with a structured JSON object containing:
 5. "youtubeSearches": An array of 3-4 specific YouTube search query strings useful for this repair
 6. "partsNeeded": An array of part name strings (simple list)
 7. "parts": An array of part objects with detailed sourcing. Each part object has:
-   - "name": part name string
-   - "listings": array of retailer listing objects, each with:
-     - "retailer": store name (e.g. "RockAuto", "AutoZone", "O'Reilly Auto Parts", "NAPA Auto Parts", "eBay Motors", "Advance Auto Parts", "Dealership/OEM")
-     - "type": either "OEM" or "Aftermarket"
-     - "brand": brand name string (e.g. "ACDelco", "Dorman", "Gates", "Bosch", "Genuine OEM")
-     - "price": realistic estimated price string with $ sign (e.g. "$24.99", "$89–$140")
-     - "url": deep search URL for that retailer. Use these URL patterns:
-       * RockAuto: "https://www.rockauto.com/en/catalog/[make],[model],[year]" (use actual make/model/year lowercased, no spaces, use commas)
-       * AutoZone: "https://www.autozone.com/searchresult?searchText=[part+name+vehicle]"
-       * O'Reilly: "https://www.oreillyauto.com/detail/b/[part-name-slugified]"
-       * NAPA: "https://www.napaonline.com/en/search#query=[part+name+vehicle]"
-       * eBay Motors: "https://www.ebay.com/sch/i.html?_nkw=[part+name+vehicle]&_sacat=6030"
-       * Advance Auto: "https://shop.advanceautoparts.com/find/[part-name-vehicle]"
-       * Dealership: "https://www.google.com/search?q=[year]+[make]+[model]+OEM+[part]+dealer"
-   Include 2-3 OEM listings and 3-4 aftermarket listings per part. Provide realistic price estimates based on typical market prices for the vehicle era and part type.
+    - "name": part name string
+    - "listings": array of retailer listing objects, each with:
+      - "retailer": store name (e.g. "RockAuto", "AutoZone", "O'Reilly Auto Parts", "NAPA Auto Parts", "eBay Motors", "Advance Auto Parts", "Dealership/OEM", "Amazon", "CarParts.com", "PartsGeek")
+      - "type": either "OEM" or "Aftermarket"
+      - "brand": brand name string (e.g. "ACDelco", "Dorman", "Gates", "Bosch", "Genuine OEM", "Moog", "Delphi", "Standard Motor Products")
+      - "price": realistic estimated price string with $ sign (e.g. "$24.99", "$89–$140")
+      - "url": deep search URL for that retailer. Use these URL patterns:
+        * RockAuto: "https://www.rockauto.com/en/catalog/[make],[model],[year]" (use actual make/model/year lowercased, no spaces, use commas)
+        * AutoZone: "https://www.autozone.com/searchresult?searchText=[part+name+vehicle]"
+        * O'Reilly: "https://www.oreillyauto.com/detail/b/[part-name-slugified]"
+        * NAPA: "https://www.napaonline.com/en/search#query=[part+name+vehicle]"
+        * eBay Motors: "https://www.ebay.com/sch/i.html?_nkw=[part+name+vehicle]&_sacat=6030"
+        * Advance Auto: "https://shop.advanceautoparts.com/find/[part-name-vehicle]"
+        * Amazon: "https://www.amazon.com/s?k=[part+name+vehicle]"
+        * CarParts.com: "https://www.carparts.com/search?q=[part+name+vehicle]"
+        * PartsGeek: "https://www.partsgeek.com/catalog/search/?query=[part+name+vehicle]"
+        * Dealership: "https://www.google.com/search?q=[year]+[make]+[model]+OEM+[part]+dealer"
+    Include 2-3 OEM listings and AT LEAST 4 aftermarket listings per part from different retailers/brands. Provide realistic price estimates based on typical market prices for the vehicle era and part type. Always try to include RockAuto, AutoZone, O'Reilly, NAPA, eBay, Advance Auto, Amazon among aftermarket options.
 
 Format response as valid JSON only with no markdown code blocks.`;
 

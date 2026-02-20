@@ -2,7 +2,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { useVehicleData } from "@/hooks/useVehicleData";
-import { Car, Calendar, Wrench, Tag } from "lucide-react";
+import { Car, Calendar, Wrench, Zap } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface VehicleSelectorProps {
@@ -14,8 +14,8 @@ const VehicleSelector = ({ vehicleData }: VehicleSelectorProps) => {
     years, year, setYear,
     makes, make, setMake,
     models, model, setModel,
-    trims, trim, setTrim,
-    loadingMakes, loadingModels,
+    engines, engine, setEngine,
+    loadingMakes, loadingModels, loadingEngines,
   } = vehicleData;
 
   return (
@@ -79,21 +79,25 @@ const VehicleSelector = ({ vehicleData }: VehicleSelectorProps) => {
         )}
       </div>
 
-      {/* Trim */}
+      {/* Engine */}
       <div className="space-y-2">
         <label className="flex items-center gap-2 text-sm font-condensed font-semibold uppercase tracking-wider text-muted-foreground">
-          <Tag className="w-4 h-4 text-primary" /> Trim
+          <Zap className="w-4 h-4 text-primary" /> Engine
         </label>
-        <Select value={trim} onValueChange={setTrim} disabled={!model}>
-          <SelectTrigger className="bg-secondary border-border hover:border-primary/50 transition-colors disabled:opacity-40">
-            <SelectValue placeholder={model ? "Select Trim" : "Select model first"} />
-          </SelectTrigger>
-          <SelectContent className="bg-popover border-border max-h-60">
-            {trims.map((t) => (
-              <SelectItem key={t} value={t}>{t}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        {loadingEngines ? (
+          <Skeleton className="h-10 w-full" />
+        ) : (
+          <Select value={engine} onValueChange={setEngine} disabled={!model}>
+            <SelectTrigger className="bg-secondary border-border hover:border-primary/50 transition-colors disabled:opacity-40">
+              <SelectValue placeholder={model ? "Select Engine" : "Select model first"} />
+            </SelectTrigger>
+            <SelectContent className="bg-popover border-border max-h-60">
+              {engines.map((e) => (
+                <SelectItem key={e} value={e}>{e}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
       </div>
     </div>
   );

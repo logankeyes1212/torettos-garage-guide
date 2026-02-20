@@ -49,6 +49,31 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
             ))}
           </div>
 
+          {/* Smoke effects */}
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full">
+            {[...Array(6)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute bottom-10 rounded-full bg-muted/40 blur-xl"
+                style={{
+                  left: `${35 + Math.random() * 30}%`,
+                  width: `${60 + Math.random() * 80}px`,
+                  height: `${60 + Math.random() * 80}px`,
+                }}
+                animate={{
+                  y: [0, -250],
+                  opacity: [0.6, 0],
+                  scale: [1, 3],
+                }}
+                transition={{
+                  duration: 2 + Math.random(),
+                  delay: i * 0.3,
+                  repeat: Infinity,
+                }}
+              />
+            ))}
+          </div>
+
           {/* Charger burnout image — shaking */}
           <motion.div
             className="relative z-10 w-full max-w-2xl px-4"
@@ -64,66 +89,22 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
               transition={{ duration: 0.6, ease: "easeOut" }}
             />
 
-            {/* Dense tire smoke — left rear */}
-            <div className="absolute bottom-[10%] left-[25%] w-[30%] pointer-events-none">
-              {[...Array(8)].map((_, i) => (
+            {/* Extra animated smoke at tire base */}
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full pointer-events-none">
+              {[...Array(5)].map((_, i) => (
                 <motion.div
-                  key={`smoke-l-${i}`}
-                  className="absolute rounded-full bg-white/25 blur-2xl"
+                  key={i}
+                  className="absolute bottom-6 rounded-full bg-white/20 blur-2xl"
                   style={{
-                    left: `${Math.random() * 60}%`,
-                    bottom: 0,
-                    width: `${50 + Math.random() * 70}px`,
-                    height: `${40 + Math.random() * 60}px`,
+                    left: `${40 + i * 4}%`,
+                    width: `${80 + i * 20}px`,
+                    height: `${60 + i * 15}px`,
                   }}
-                  animate={{
-                    y: [0, -200 - Math.random() * 100],
-                    x: [0, -30 + Math.random() * 60],
-                    opacity: [0.7, 0],
-                    scale: [1, 2.5 + Math.random()],
-                  }}
-                  transition={{
-                    duration: 1.5 + Math.random() * 1.5,
-                    delay: i * 0.15,
-                    repeat: Infinity,
-                  }}
+                  animate={{ y: [0, -180], opacity: [0.7, 0], scale: [1, 2.5] }}
+                  transition={{ duration: 1.5 + i * 0.2, delay: i * 0.2, repeat: Infinity }}
                 />
               ))}
             </div>
-
-            {/* Dense tire smoke — right rear */}
-            <div className="absolute bottom-[10%] right-[25%] w-[30%] pointer-events-none">
-              {[...Array(8)].map((_, i) => (
-                <motion.div
-                  key={`smoke-r-${i}`}
-                  className="absolute rounded-full bg-white/20 blur-2xl"
-                  style={{
-                    right: `${Math.random() * 60}%`,
-                    bottom: 0,
-                    width: `${50 + Math.random() * 70}px`,
-                    height: `${40 + Math.random() * 60}px`,
-                  }}
-                  animate={{
-                    y: [0, -180 - Math.random() * 120],
-                    x: [0, -20 + Math.random() * 40],
-                    opacity: [0.6, 0],
-                    scale: [1, 2.8 + Math.random()],
-                  }}
-                  transition={{
-                    duration: 1.8 + Math.random() * 1.2,
-                    delay: i * 0.18,
-                    repeat: Infinity,
-                  }}
-                />
-              ))}
-            </div>
-
-            {/* Ground-level haze */}
-            <motion.div
-              className="absolute bottom-[5%] left-[10%] right-[10%] h-16 bg-gradient-to-t from-white/15 to-transparent blur-xl rounded-full pointer-events-none"
-              animate={{ opacity: [0.4, 0.7, 0.4], scaleX: [0.9, 1.1, 0.9] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            />
 
             {/* Tire marks */}
             <motion.div

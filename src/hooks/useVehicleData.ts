@@ -9,9 +9,7 @@ interface VehicleModel {
 const YEARS = Array.from({ length: 108 }, (_, i) => (2027 - i).toString());
 
 // Curated list of car manufacturers with production year ranges
-// [name, firstYear, lastYear]
 const CLASSIC_MAKES: [string, number, number][] = [
-  // Classic / vintage
   ["AC", 1908, 1999],
   ["Alfa Romeo", 1910, 2027],
   ["Allard", 1936, 1960],
@@ -101,9 +99,7 @@ const CLASSIC_MAKES: [string, number, number][] = [
   ["Volvo", 1927, 2027],
   ["Willys", 1908, 1963],
   ["Yugo", 1980, 1992],
-  // Modern makes (post-1999)
   ["Acura", 1986, 2027],
-  ["Chevrolet (EV)", 2023, 2027],
   ["Genesis", 2015, 2027],
   ["Honda", 1948, 2027],
   ["Hyundai", 1967, 2027],
@@ -111,54 +107,27 @@ const CLASSIC_MAKES: [string, number, number][] = [
   ["Jeep", 1941, 2027],
   ["Kia", 1944, 2027],
   ["Lexus", 1989, 2027],
-  ["Lincoln (Modern)", 2000, 2027],
   ["MINI", 1959, 2027],
   ["Polestar", 2017, 2027],
   ["Ram Trucks", 2010, 2027],
   ["Rivian", 2021, 2027],
   ["Scion", 2003, 2016],
   ["Tesla", 2008, 2027],
-  ["Volkswagen (Modern)", 2000, 2027],
-];
-
-// Common trims for classic cars
-const CLASSIC_TRIMS = [
-  "Unknown",
-  "Base",
-  "Standard",
-  "Deluxe",
-  "Custom",
-  "Sport",
-  "Special",
-  "Super",
-  "Limited",
-  "GT",
-  "SS",
-  "RS",
-  "SE",
-  "LE",
-  "GS",
-  "GL",
-  "GLS",
-  "Convertible",
-  "Hardtop",
-  "Station Wagon",
-  "Coupe",
-  "Sedan",
 ];
 
 export const useVehicleData = () => {
   const [year, setYear] = useState("");
   const [make, setMake] = useState("");
   const [model, setModel] = useState("");
-  const [trim, setTrim] = useState("");
+  const [engine, setEngine] = useState("");
 
   const [makes, setMakes] = useState<string[]>([]);
   const [models, setModels] = useState<string[]>([]);
-  const [trims, setTrims] = useState<string[]>([]);
+  const [engines, setEngines] = useState<string[]>([]);
 
   const [loadingMakes, setLoadingMakes] = useState(false);
   const [loadingModels, setLoadingModels] = useState(false);
+  const [loadingEngines, setLoadingEngines] = useState(false);
 
   // Filter curated makes by year
   useEffect(() => {
@@ -166,92 +135,102 @@ export const useVehicleData = () => {
       setMakes([]);
       setMake("");
       setModel("");
-      setTrim("");
+      setEngine("");
       return;
     }
-
     const yearNum = parseInt(year);
     const filtered = CLASSIC_MAKES
       .filter(([, start, end]) => yearNum >= start && yearNum <= end)
       .map(([name]) => name)
       .sort((a, b) => a.localeCompare(b));
-
     setMakes(filtered);
     setMake("");
     setModel("");
-    setTrim("");
+    setEngine("");
   }, [year]);
 
-  // Fetch models from NHTSA when make changes
+  // Fetch models from NHTSA — only models produced that specific year
   useEffect(() => {
     if (!year || !make) {
       setModels([]);
       setModel("");
-      setTrim("");
+      setEngine("");
       return;
     }
-
     setLoadingModels(true);
     setModel("");
-    setTrim("");
+    setEngine("");
 
+    // Use year-specific endpoint to get only models made that year
     fetch(
-      `https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/${encodeURIComponent(make)}/modelyear/${year}/vehicletype/car?format=json`
+      `https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/${encodeURIComponent(make)}/modelyear/${year}?format=json`
     )
       .then((res) => res.json())
       .then((data) => {
-        if (!data.Results || data.Results.length === 0) {
-          // Fall back to all models for this make
-          return fetch(
-            `https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMake/${encodeURIComponent(make)}?format=json`
-          )
-            .then((r) => r.json())
-            .then((fallback) => {
-              const names = (fallback.Results || [])
-                .map((m: VehicleModel) => m.Model_Name)
-                .filter((n: string) => n && n.length < 40) // filter out garbage
-                .sort((a: string, b: string) => a.localeCompare(b));
-              setModels(names.length > 0 ? names : ["Unknown"]);
-            });
-        }
-        const names = data.Results
+        const names = (data.Results || [])
           .map((m: VehicleModel) => m.Model_Name)
           .filter((n: string) => n && n.length < 40)
           .sort((a: string, b: string) => a.localeCompare(b));
-        setModels(names.length > 0 ? names : ["Unknown"]);
+        // Deduplicate
+        const unique = [...new Set(names)] as string[];
+        setModels(unique.length > 0 ? unique : ["Other / Custom"]);
       })
-      .catch(() => setModels(["Unknown"]))
+      .catch(() => setModels(["Other / Custom"]))
       .finally(() => setLoadingModels(false));
   }, [year, make]);
 
-  // Trims for classic cars
+  // Fetch engine options when model is selected
   useEffect(() => {
-    if (!model) {
-      setTrims([]);
-      setTrim("");
+    if (!year || !make || !model) {
+      setEngines([]);
+      setEngine("");
       return;
     }
-    setTrims(CLASSIC_TRIMS);
-    setTrim("");
-  }, [model]);
+    setLoadingEngines(true);
+    setEngine("");
+
+    // Use NHTSA decode to find engine configurations
+    fetch(
+      `https://vpic.nhtsa.dot.gov/api/vehicles/GetVehicleVariableValuesList/Engine%20Number%20of%20Cylinders?format=json`
+    )
+      .then(() => {
+        // NHTSA doesn't have a clean engine-by-model endpoint, so we provide
+        // common engine options and let the AI provide specifics in repair results
+        const commonEngines = [
+          "Unknown / Not Sure",
+          "Inline 4-Cylinder",
+          "Inline 6-Cylinder",
+          "V6",
+          "V8 Small Block",
+          "V8 Big Block",
+          "V8",
+          "Flat 4 (Boxer)",
+          "Flat 6 (Boxer)",
+          "V10",
+          "V12",
+          "Rotary",
+          "Turbo 4-Cylinder",
+          "Turbo V6",
+          "Supercharged V8",
+          "Diesel",
+          "Hybrid",
+          "Electric",
+        ];
+        setEngines(commonEngines);
+      })
+      .catch(() => setEngines(["Unknown / Not Sure"]))
+      .finally(() => setLoadingEngines(false));
+  }, [year, make, model]);
 
   const isVehicleSelected = !!(year && make && model);
 
   return {
     years: YEARS,
-    year,
-    setYear,
-    makes,
-    make,
-    setMake,
-    models,
-    model,
-    setModel,
-    trims,
-    trim,
-    setTrim,
-    loadingMakes,
-    loadingModels,
+    year, setYear,
+    makes, make, setMake,
+    models, model, setModel,
+    engines, engine, setEngine,
+    loadingMakes, loadingModels, loadingEngines,
     isVehicleSelected,
   };
 };

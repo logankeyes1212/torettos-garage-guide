@@ -50,7 +50,7 @@ const Index = () => {
   const resultsRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
-  const vehicleLabel = [vehicleData.year, vehicleData.make, vehicleData.model, vehicleData.trim]
+  const vehicleLabel = [vehicleData.year, vehicleData.make, vehicleData.model, vehicleData.engine]
     .filter(Boolean)
     .join(" ");
 
@@ -123,7 +123,7 @@ const Index = () => {
               <span className="text-primary drop-shadow-[0_0_30px_hsl(var(--primary)/0.5)]">Toolbox</span>
             </h1>
             <p className="font-condensed text-xl md:text-2xl text-muted-foreground tracking-wide uppercase">
-              Your Ride. Your Rules. <span className="text-primary">AI-Powered Repairs.</span>
+              Your Ride. Your Rules. <span className="text-primary">Expert Repairs.</span>
             </p>
           </motion.div>
 
@@ -161,7 +161,7 @@ const Index = () => {
               <div className="flex flex-col items-center justify-center py-20 space-y-4">
                 <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
                 <p className="font-condensed text-muted-foreground uppercase tracking-wider">
-                  Consulting the mechanic AI...
+                  Consulting Dominic Toretto...
                 </p>
               </div>
             ) : searchResult ? (
@@ -183,8 +183,8 @@ const Index = () => {
               {[
                 {
                   icon: Wrench,
-                  title: "AI Repair Guides",
-                  desc: "Get step-by-step repair instructions powered by AI, tailored to your exact vehicle.",
+                   title: "Repair Guides",
+                   desc: "Get step-by-step repair instructions tailored to your exact vehicle.",
                 },
                 {
                   icon: Flame,

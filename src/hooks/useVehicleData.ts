@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { getModelEngines } from "@/lib/engineData";
+import { getClassicModels } from "@/lib/classicCarModels";
 
 interface VehicleModel {
   Model_ID: number;
@@ -162,7 +163,9 @@ export const useVehicleData = () => {
     setModel("");
     setEngine("");
 
-    // Use year-specific endpoint to get only models made that year
+    const yearNum = parseInt(year);
+
+    // Try NHTSA API first
     fetch(
       `https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/${encodeURIComponent(make)}/modelyear/${year}?format=json`
     )
@@ -172,11 +175,28 @@ export const useVehicleData = () => {
           .map((m: VehicleModel) => m.Model_Name)
           .filter((n: string) => n && n.length < 40)
           .sort((a: string, b: string) => a.localeCompare(b));
-        // Deduplicate
         const unique = [...new Set(names)] as string[];
-        setModels(unique.length > 0 ? unique : ["Other / Custom"]);
+
+        if (unique.length > 0) {
+          setModels(unique);
+        } else {
+          // Fallback to curated classic models
+          const classic = getClassicModels(yearNum, make);
+          if (classic && classic.length > 0) {
+            setModels([...classic, "Other / Custom"]);
+          } else {
+            setModels(["Other / Custom"]);
+          }
+        }
       })
-      .catch(() => setModels(["Other / Custom"]))
+      .catch(() => {
+        const classic = getClassicModels(yearNum, make);
+        if (classic && classic.length > 0) {
+          setModels([...classic, "Other / Custom"]);
+        } else {
+          setModels(["Other / Custom"]);
+        }
+      })
       .finally(() => setLoadingModels(false));
   }, [year, make]);
 

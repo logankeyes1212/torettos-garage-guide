@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { getModelEngines } from "@/lib/engineData";
 
 interface VehicleModel {
   Model_ID: number;
@@ -189,6 +190,15 @@ export const useVehicleData = () => {
     setEngine("");
     const y = parseInt(year);
 
+    // Try model-specific lookup first
+    const specificEngines = getModelEngines(y, make, model);
+    if (specificEngines) {
+      specificEngines.push("Other / Not Listed");
+      setEngines(specificEngines);
+      return;
+    }
+
+    // Fallback: category-based logic
     const japanese = ["Acura", "Honda", "Toyota", "Lexus", "Mazda", "Nissan", "Infiniti", "Subaru", "Mitsubishi", "Suzuki", "Scion"];
     const european = ["BMW", "Mercedes-Benz", "Audi", "Volkswagen", "Porsche", "Volvo", "Saab", "Peugeot", "Citroën", "Renault"];
     const exotic = ["Ferrari", "Lamborghini", "Maserati", "McLaren", "Bugatti", "Aston Martin", "Bentley", "Rolls-Royce", "Maybach", "Lotus"];
@@ -201,7 +211,6 @@ export const useVehicleData = () => {
     if (ev.includes(make)) {
       opts = ["Electric"];
     } else if (y >= 2020) {
-      // Modern era
       if (japanese.includes(make) || korean.includes(make)) {
         opts = ["Inline 4-Cylinder", "Turbo 4-Cylinder", "V6", "Hybrid", "Electric"];
       } else if (european.includes(make)) {
@@ -230,7 +239,6 @@ export const useVehicleData = () => {
         opts = ["Inline 4-Cylinder", "V6", "V8", "Diesel"];
       }
     } else if (y >= 1960) {
-      // Classic muscle era
       if (["Chevrolet", "Pontiac", "Buick", "Oldsmobile", "Cadillac", "GM", "GMC"].includes(make)) {
         opts = ["Inline 6-Cylinder", "V8 Small Block", "V8 Big Block", "V8"];
       } else if (["Ford", "Mercury", "Lincoln", "Shelby"].includes(make)) {
@@ -251,11 +259,9 @@ export const useVehicleData = () => {
         opts = ["Inline 6-Cylinder", "V8"];
       }
     } else {
-      // Pre-1960 vintage
       opts = ["Inline 4-Cylinder", "Inline 6-Cylinder", "Flat 4 (Boxer)", "V8", "V12"];
     }
 
-    // Always add an escape hatch
     opts.push("Other / Not Listed");
     setEngines(opts);
   }, [year, make, model]);

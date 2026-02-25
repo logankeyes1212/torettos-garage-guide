@@ -37,6 +37,9 @@ interface SearchResultsProps {
   vehicle: string;
   issue: string;
   result: RepairResult;
+  onCauseSelect?: (cause: string) => void;
+  isLoadingCause?: boolean;
+  selectedCause?: string | null;
 }
 
 const difficultyColor: Record<string, string> = {
@@ -46,7 +49,6 @@ const difficultyColor: Record<string, string> = {
   "Professional Only": "bg-red-900/50 text-red-400 border-red-700",
 };
 
-// Safely render the repair guide — AI may return a string or a structured object
 const renderRepairGuide = (guide: string | RepairGuideObject) => {
   if (!guide) return null;
 
@@ -92,10 +94,22 @@ const renderRepairGuide = (guide: string | RepairGuideObject) => {
   );
 };
 
-const SearchResults = ({ vehicle, issue, result }: SearchResultsProps) => {
+const INITIAL_SHOW_COUNT = 3;
+
+const SearchResults = ({ vehicle, issue, result, onCauseSelect, isLoadingCause, selectedCause }: SearchResultsProps) => {
   const [guideExpanded, setGuideExpanded] = useState(true);
+  const [showAllDiscussions, setShowAllDiscussions] = useState(false);
+  const [showAllVideos, setShowAllVideos] = useState(false);
 
   const diffClass = difficultyColor[result.estimatedDifficulty] ?? "bg-secondary text-muted-foreground border-border";
+
+  const visibleDiscussions = showAllDiscussions
+    ? result.forumDiscussions
+    : result.forumDiscussions?.slice(0, INITIAL_SHOW_COUNT);
+
+  const visibleVideos = showAllVideos
+    ? result.youtubeSearches
+    : result.youtubeSearches?.slice(0, INITIAL_SHOW_COUNT);
 
   return (
     <motion.div
@@ -117,185 +131,244 @@ const SearchResults = ({ vehicle, issue, result }: SearchResultsProps) => {
       </div>
       <p className="text-muted-foreground font-condensed italic">"{issue}"</p>
 
-      {/* Common Causes */}
+      {/* Common Causes — selectable */}
       {result.commonCauses?.length > 0 && (
         <div className="bg-card border border-border rounded-lg p-5">
           <div className="flex items-center gap-2 mb-3">
             <AlertTriangle className="w-5 h-5 text-primary" />
             <h3 className="font-heading text-lg uppercase tracking-wide">Likely Causes</h3>
           </div>
+          <p className="text-muted-foreground text-xs font-condensed mb-3 uppercase tracking-wider">
+            Select a cause to get a targeted repair guide
+          </p>
           <ul className="space-y-2">
-            {result.commonCauses.map((cause, i) => (
-              <li key={i} className="flex items-start gap-2 text-muted-foreground">
-                <span className="text-primary font-bold mt-0.5">{i + 1}.</span>
-                <span>{cause}</span>
-              </li>
-            ))}
+            {result.commonCauses.map((cause, i) => {
+              const isSelected = selectedCause === cause;
+              const isLoading = isLoadingCause && isSelected;
+              return (
+                <li key={i}>
+                  <button
+                    onClick={() => onCauseSelect?.(cause)}
+                    disabled={isLoadingCause}
+                    className={`w-full text-left flex items-start gap-2 p-3 rounded-lg border transition-all ${
+                      isSelected
+                        ? "border-primary bg-primary/10 text-foreground"
+                        : "border-border bg-secondary/30 text-muted-foreground hover:border-primary/50 hover:bg-secondary/60"
+                    } ${isLoadingCause && !isSelected ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+                  >
+                    <span className="text-primary font-bold mt-0.5 shrink-0">{i + 1}.</span>
+                    <span className="flex-1">{cause}</span>
+                    {isLoading && (
+                      <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin shrink-0 mt-0.5" />
+                    )}
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         </div>
       )}
 
-      {/* Repair Guide */}
-      <div className="bg-card border border-border rounded-lg overflow-hidden">
-        <button
-          className="w-full flex items-center justify-between gap-2 p-5 hover:bg-secondary/50 transition-colors"
-          onClick={() => setGuideExpanded((v) => !v)}
-        >
-          <div className="flex items-center gap-2">
-            <Wrench className="w-5 h-5 text-primary" />
-            <h3 className="font-heading text-lg uppercase tracking-wide">Toretto's Repair Guide</h3>
-          </div>
-          {guideExpanded ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
-        </button>
-        <AnimatePresence>
-          {guideExpanded && (
-            <motion.div
-              key="guide"
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="overflow-hidden"
-            >
-              <div className="px-5 pb-5 text-muted-foreground leading-relaxed border-t border-border pt-4 space-y-3">
-                {renderRepairGuide(result.repairGuide)}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      {/* Parts — structured OEM/Aftermarket */}
-      {result.parts && result.parts.length > 0 && (
-        <div className="bg-card border border-border rounded-lg p-5">
-          <div className="flex items-center gap-2 mb-4">
-            <Package className="w-5 h-5 text-primary" />
-            <h3 className="font-heading text-lg uppercase tracking-wide">Parts You May Need</h3>
-          </div>
-          <div className="space-y-5">
-            {result.parts.map((part, i) => {
-              const oemListings = part.listings?.filter(l => l.type === "OEM") ?? [];
-              const aftermarketListings = part.listings?.filter(l => l.type === "Aftermarket") ?? [];
-              return (
-                <div key={i} className="border border-border rounded-lg overflow-hidden">
-                  <div className="bg-secondary/60 px-4 py-2 border-b border-border">
-                    <p className="font-heading uppercase tracking-wide text-foreground">{part.name}</p>
-                  </div>
-                  <div className="p-4 space-y-3">
-                    {oemListings.length > 0 && (
-                      <div>
-                        <p className="text-xs font-condensed uppercase tracking-widest text-primary mb-2">OEM / Dealer</p>
-                        <div className="space-y-1">
-                          {oemListings.map((l, j) => (
-                            <a
-                              key={j}
-                              href={l.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center justify-between gap-3 px-3 py-2 bg-secondary/30 border border-border rounded hover:border-primary/50 hover:bg-secondary transition-colors group"
-                            >
-                              <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors font-condensed">{l.retailer}{l.brand ? ` — ${l.brand}` : ""}</span>
-                              <span className="text-sm font-bold text-primary shrink-0">{l.price}</span>
-                            </a>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                    {aftermarketListings.length > 0 && (
-                      <div>
-                        <p className="text-xs font-condensed uppercase tracking-widest text-muted-foreground mb-2">Aftermarket</p>
-                        <div className="space-y-1">
-                          {aftermarketListings.map((l, j) => (
-                            <a
-                              key={j}
-                              href={l.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center justify-between gap-3 px-3 py-2 bg-secondary/30 border border-border rounded hover:border-primary/50 hover:bg-secondary transition-colors group"
-                            >
-                              <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors font-condensed">{l.retailer}{l.brand ? ` — ${l.brand}` : ""}</span>
-                              <span className="text-sm font-bold text-foreground shrink-0">{l.price}</span>
-                            </a>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* Fallback plain parts list if structured parts not available */}
-      {(!result.parts || result.parts.length === 0) && result.partsNeeded?.length > 0 && (
-        <div className="bg-card border border-border rounded-lg p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <Package className="w-5 h-5 text-primary" />
-            <h3 className="font-heading text-lg uppercase tracking-wide">Parts You May Need</h3>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {result.partsNeeded.map((part, i) => (
-              <span
-                key={i}
-                className="px-3 py-1 bg-secondary border border-border rounded-full text-sm text-muted-foreground font-condensed"
-              >
-                {part}
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Forum Discussions */}
-      {result.forumDiscussions?.length > 0 && (
-        <div className="bg-card border border-border rounded-lg p-5">
-          <div className="flex items-center gap-2 mb-4">
-            <MessageSquare className="w-5 h-5 text-primary" />
-            <h3 className="font-heading text-lg uppercase tracking-wide">Community Discussions</h3>
-          </div>
-          <div className="space-y-4">
-            {result.forumDiscussions.map((d, i) => (
-              <div key={i} className="border border-border rounded-lg p-4 bg-secondary/30">
-                <div className="flex items-start justify-between gap-2 mb-2">
-                  <p className="font-semibold text-foreground text-sm">{d.title}</p>
-                  <span className="text-xs text-primary font-condensed whitespace-nowrap border border-primary/30 rounded px-2 py-0.5">
-                    {d.community}
-                  </span>
-                </div>
-                <p className="text-muted-foreground text-sm">{d.summary}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* YouTube Searches */}
-      {result.youtubeSearches?.length > 0 && (
-        <div className="bg-card border border-border rounded-lg p-5">
-          <div className="flex items-center gap-2 mb-4">
-            <Youtube className="w-5 h-5 text-primary" />
-            <h3 className="font-heading text-lg uppercase tracking-wide">Watch & Learn</h3>
-          </div>
-          <p className="text-muted-foreground text-sm mb-3 font-condensed">
-            Search these on YouTube for step-by-step video tutorials:
+      {/* Loading overlay for cause-specific search */}
+      {isLoadingCause && (
+        <div className="flex flex-col items-center justify-center py-10 space-y-3">
+          <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+          <p className="font-condensed text-muted-foreground uppercase tracking-wider text-sm">
+            Getting targeted repair guide...
           </p>
-          <div className="space-y-2">
-            {result.youtubeSearches.map((q, i) => (
-              <a
-                key={i}
-                href={`https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 p-3 bg-secondary/50 border border-border rounded-lg hover:border-primary/50 hover:bg-secondary transition-colors group"
-              >
-                <Youtube className="w-4 h-4 text-destructive shrink-0" />
-                <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">{q}</span>
-              </a>
-            ))}
-          </div>
         </div>
+      )}
+
+      {/* Only show detailed results when not loading a cause */}
+      {!isLoadingCause && (
+        <>
+          {/* Repair Guide */}
+          <div className="bg-card border border-border rounded-lg overflow-hidden">
+            <button
+              className="w-full flex items-center justify-between gap-2 p-5 hover:bg-secondary/50 transition-colors"
+              onClick={() => setGuideExpanded((v) => !v)}
+            >
+              <div className="flex items-center gap-2">
+                <Wrench className="w-5 h-5 text-primary" />
+                <h3 className="font-heading text-lg uppercase tracking-wide">Toretto's Repair Guide</h3>
+              </div>
+              {guideExpanded ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
+            </button>
+            <AnimatePresence>
+              {guideExpanded && (
+                <motion.div
+                  key="guide"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="overflow-hidden"
+                >
+                  <div className="px-5 pb-5 text-muted-foreground leading-relaxed border-t border-border pt-4 space-y-3">
+                    {renderRepairGuide(result.repairGuide)}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Parts — structured OEM/Aftermarket */}
+          {result.parts && result.parts.length > 0 && (
+            <div className="bg-card border border-border rounded-lg p-5">
+              <div className="flex items-center gap-2 mb-4">
+                <Package className="w-5 h-5 text-primary" />
+                <h3 className="font-heading text-lg uppercase tracking-wide">Parts You May Need</h3>
+              </div>
+              <div className="space-y-5">
+                {result.parts.map((part, i) => {
+                  const oemListings = part.listings?.filter(l => l.type === "OEM") ?? [];
+                  const aftermarketListings = part.listings?.filter(l => l.type === "Aftermarket") ?? [];
+                  return (
+                    <div key={i} className="border border-border rounded-lg overflow-hidden">
+                      <div className="bg-secondary/60 px-4 py-2 border-b border-border">
+                        <p className="font-heading uppercase tracking-wide text-foreground">{part.name}</p>
+                      </div>
+                      <div className="p-4 space-y-3">
+                        {oemListings.length > 0 && (
+                          <div>
+                            <p className="text-xs font-condensed uppercase tracking-widest text-primary mb-2">OEM / Dealer</p>
+                            <div className="space-y-1">
+                              {oemListings.map((l, j) => (
+                                <a
+                                  key={j}
+                                  href={l.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center justify-between gap-3 px-3 py-2 bg-secondary/30 border border-border rounded hover:border-primary/50 hover:bg-secondary transition-colors group"
+                                >
+                                  <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors font-condensed">{l.retailer}{l.brand ? ` — ${l.brand}` : ""}</span>
+                                  <span className="text-sm font-bold text-primary shrink-0">{l.price}</span>
+                                </a>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        {aftermarketListings.length > 0 && (
+                          <div>
+                            <p className="text-xs font-condensed uppercase tracking-widest text-muted-foreground mb-2">Aftermarket</p>
+                            <div className="space-y-1">
+                              {aftermarketListings.map((l, j) => (
+                                <a
+                                  key={j}
+                                  href={l.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center justify-between gap-3 px-3 py-2 bg-secondary/30 border border-border rounded hover:border-primary/50 hover:bg-secondary transition-colors group"
+                                >
+                                  <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors font-condensed">{l.retailer}{l.brand ? ` — ${l.brand}` : ""}</span>
+                                  <span className="text-sm font-bold text-foreground shrink-0">{l.price}</span>
+                                </a>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Fallback plain parts list */}
+          {(!result.parts || result.parts.length === 0) && result.partsNeeded?.length > 0 && (
+            <div className="bg-card border border-border rounded-lg p-5">
+              <div className="flex items-center gap-2 mb-3">
+                <Package className="w-5 h-5 text-primary" />
+                <h3 className="font-heading text-lg uppercase tracking-wide">Parts You May Need</h3>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {result.partsNeeded.map((part, i) => (
+                  <span
+                    key={i}
+                    className="px-3 py-1 bg-secondary border border-border rounded-full text-sm text-muted-foreground font-condensed"
+                  >
+                    {part}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Forum Discussions — show 3 initially */}
+          {result.forumDiscussions?.length > 0 && (
+            <div className="bg-card border border-border rounded-lg p-5">
+              <div className="flex items-center gap-2 mb-4">
+                <MessageSquare className="w-5 h-5 text-primary" />
+                <h3 className="font-heading text-lg uppercase tracking-wide">Community Discussions</h3>
+              </div>
+              <div className="space-y-4">
+                {visibleDiscussions.map((d, i) => (
+                  <div key={i} className="border border-border rounded-lg p-4 bg-secondary/30">
+                    <div className="flex items-start justify-between gap-2 mb-2">
+                      <p className="font-semibold text-foreground text-sm">{d.title}</p>
+                      <span className="text-xs text-primary font-condensed whitespace-nowrap border border-primary/30 rounded px-2 py-0.5">
+                        {d.community}
+                      </span>
+                    </div>
+                    <p className="text-muted-foreground text-sm">{d.summary}</p>
+                  </div>
+                ))}
+              </div>
+              {result.forumDiscussions.length > INITIAL_SHOW_COUNT && (
+                <button
+                  onClick={() => setShowAllDiscussions((v) => !v)}
+                  className="mt-3 flex items-center gap-1 text-sm text-primary font-condensed uppercase tracking-wider hover:underline"
+                >
+                  {showAllDiscussions ? (
+                    <>Show Less <ChevronUp className="w-3 h-3" /></>
+                  ) : (
+                    <>Show {result.forumDiscussions.length - INITIAL_SHOW_COUNT} More <ChevronDown className="w-3 h-3" /></>
+                  )}
+                </button>
+              )}
+            </div>
+          )}
+
+          {/* YouTube Searches — show 3 initially */}
+          {result.youtubeSearches?.length > 0 && (
+            <div className="bg-card border border-border rounded-lg p-5">
+              <div className="flex items-center gap-2 mb-4">
+                <Youtube className="w-5 h-5 text-primary" />
+                <h3 className="font-heading text-lg uppercase tracking-wide">Watch & Learn</h3>
+              </div>
+              <p className="text-muted-foreground text-sm mb-3 font-condensed">
+                Search these on YouTube for step-by-step video tutorials:
+              </p>
+              <div className="space-y-2">
+                {visibleVideos.map((q, i) => (
+                  <a
+                    key={i}
+                    href={`https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 p-3 bg-secondary/50 border border-border rounded-lg hover:border-primary/50 hover:bg-secondary transition-colors group"
+                  >
+                    <Youtube className="w-4 h-4 text-destructive shrink-0" />
+                    <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">{q}</span>
+                  </a>
+                ))}
+              </div>
+              {result.youtubeSearches.length > INITIAL_SHOW_COUNT && (
+                <button
+                  onClick={() => setShowAllVideos((v) => !v)}
+                  className="mt-3 flex items-center gap-1 text-sm text-primary font-condensed uppercase tracking-wider hover:underline"
+                >
+                  {showAllVideos ? (
+                    <>Show Less <ChevronUp className="w-3 h-3" /></>
+                  ) : (
+                    <>Show {result.youtubeSearches.length - INITIAL_SHOW_COUNT} More <ChevronDown className="w-3 h-3" /></>
+                  )}
+                </button>
+              )}
+            </div>
+          )}
+        </>
       )}
     </motion.div>
   );

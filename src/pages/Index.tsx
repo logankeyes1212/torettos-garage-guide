@@ -45,6 +45,8 @@ const Index = () => {
   const [isSearching, setIsSearching] = useState(false);
   const [searchResult, setSearchResult] = useState<RepairResult | null>(null);
   const [lastSearchedIssue, setLastSearchedIssue] = useState("");
+  const [isLoadingCause, setIsLoadingCause] = useState(false);
+  const [selectedCause, setSelectedCause] = useState<string | null>(null);
   const vehicleData = useVehicleData();
   // heroImage imported as static asset above
   const resultsRef = useRef<HTMLDivElement>(null);
@@ -58,6 +60,7 @@ const Index = () => {
     setIsSearching(true);
     setSearchResult(null);
     setLastSearchedIssue(query);
+    setSelectedCause(null);
 
     try {
       const { data, error } = await supabase.functions.invoke("repair-search", {
@@ -67,11 +70,7 @@ const Index = () => {
       if (error) throw error;
 
       if (data?.error) {
-        toast({
-          title: "Search Error",
-          description: data.error,
-          variant: "destructive",
-        });
+        toast({ title: "Search Error", description: data.error, variant: "destructive" });
         return;
       }
 
@@ -83,13 +82,41 @@ const Index = () => {
       }
     } catch (err) {
       console.error("Search error:", err);
-      toast({
-        title: "Search Failed",
-        description: "Could not connect to the AI repair service. Please try again.",
-        variant: "destructive",
-      });
+      toast({ title: "Search Failed", description: "Could not connect to the AI repair service. Please try again.", variant: "destructive" });
     } finally {
       setIsSearching(false);
+    }
+  };
+
+  const handleCauseSelect = async (cause: string) => {
+    setSelectedCause(cause);
+    setIsLoadingCause(true);
+
+    try {
+      const causeQuery = `${lastSearchedIssue} — specifically caused by: ${cause}`;
+      const { data, error } = await supabase.functions.invoke("repair-search", {
+        body: { vehicle: vehicleLabel, issue: causeQuery },
+      });
+
+      if (error) throw error;
+
+      if (data?.error) {
+        toast({ title: "Search Error", description: data.error, variant: "destructive" });
+        return;
+      }
+
+      if (data?.success && data?.data) {
+        // Keep the original common causes list, update everything else
+        setSearchResult((prev) => ({
+          ...data.data,
+          commonCauses: prev?.commonCauses ?? data.data.commonCauses,
+        }));
+      }
+    } catch (err) {
+      console.error("Cause search error:", err);
+      toast({ title: "Search Failed", description: "Could not get targeted repair guide. Please try again.", variant: "destructive" });
+    } finally {
+      setIsLoadingCause(false);
     }
   };
 
@@ -169,6 +196,9 @@ const Index = () => {
                 vehicle={vehicleLabel}
                 issue={lastSearchedIssue}
                 result={searchResult}
+                onCauseSelect={handleCauseSelect}
+                isLoadingCause={isLoadingCause}
+                selectedCause={selectedCause}
               />
             ) : null}
           </div>

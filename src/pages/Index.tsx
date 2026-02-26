@@ -1,11 +1,12 @@
 import { useState, useRef } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import SplashScreen from "@/components/SplashScreen";
 import VehicleSelector from "@/components/VehicleSelector";
 import SearchBar from "@/components/SearchBar";
 import SearchResults from "@/components/SearchResults";
 import { useVehicleData } from "@/hooks/useVehicleData";
-import heroImage from "@/assets/charger-burnout-hero.jpg";
+import { useVehicleImage } from "@/hooks/useVehicleImage";
+import defaultHeroImage from "@/assets/charger-burnout-hero.jpg";
 import { Flame, Gauge, Wrench } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -48,7 +49,8 @@ const Index = () => {
   const [isLoadingCause, setIsLoadingCause] = useState(false);
   const [selectedCause, setSelectedCause] = useState<string | null>(null);
   const vehicleData = useVehicleData();
-  // heroImage imported as static asset above
+  const { vehicleImageUrl } = useVehicleImage(vehicleData.year, vehicleData.make, vehicleData.model);
+  const heroImage = vehicleImageUrl || defaultHeroImage;
   const resultsRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
@@ -128,11 +130,18 @@ const Index = () => {
     <div className="min-h-screen pt-16">
       {/* Hero Section */}
       <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
-        {/* Background image */}
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${heroImage})` }}
-        />
+        {/* Background image with crossfade */}
+        <AnimatePresence mode="popLayout">
+          <motion.div
+            key={heroImage}
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url(${heroImage})` }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8 }}
+          />
+        </AnimatePresence>
         <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/70 to-background" />
 
         {/* Decorative ember line */}

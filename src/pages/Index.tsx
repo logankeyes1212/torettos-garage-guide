@@ -83,6 +83,16 @@ const Index = () => {
     setLastSearchedIssue(query);
     setSelectedCause(null);
 
+    // Save vehicle to user's garage if logged in
+    if (user && vehicleData.isVehicleSelected) {
+      saveVehicle({
+        year: vehicleData.year,
+        make: vehicleData.make,
+        model: vehicleData.model,
+        engine: vehicleData.engine,
+      });
+    }
+
     try {
       const { data, error } = await supabase.functions.invoke("repair-search", {
         body: { vehicle: vehicleLabel, issue: query },

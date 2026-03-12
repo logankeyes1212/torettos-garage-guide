@@ -192,13 +192,18 @@ const Index = () => {
             </p>
           </motion.div>
 
-          {/* Vehicle Selector */}
+          {/* Saved Vehicles & Vehicle Selector */}
           <motion.div
             className="mb-10"
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
+            {user && (
+              <div className="flex justify-center mb-4">
+                <SavedVehiclesDropdown onSelect={handleSavedVehicleSelect} />
+              </div>
+            )}
             <VehicleSelector vehicleData={vehicleData} />
           </motion.div>
 

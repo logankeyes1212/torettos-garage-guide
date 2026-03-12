@@ -56,6 +56,22 @@ const Index = () => {
   const heroImage = vehicleImageUrl || defaultHeroImage;
   const resultsRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  const { user } = useAuth();
+  const { saveVehicle } = useSavedVehicles();
+
+  const handleSavedVehicleSelect = (v: { year: string; make: string; model: string; engine: string | null }) => {
+    vehicleData.setYear(v.year);
+    // Need a slight delay so makes populate before setting make
+    setTimeout(() => {
+      vehicleData.setMake(v.make);
+      setTimeout(() => {
+        vehicleData.setModel(v.model);
+        setTimeout(() => {
+          if (v.engine) vehicleData.setEngine(v.engine);
+        }, 200);
+      }, 200);
+    }, 100);
+  };
 
   const vehicleLabel = [vehicleData.year, vehicleData.make, vehicleData.model, vehicleData.engine]
     .filter(Boolean)

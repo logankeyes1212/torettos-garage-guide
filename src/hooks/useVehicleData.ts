@@ -218,72 +218,15 @@ export const useVehicleData = () => {
       return;
     }
 
-    // Fallback: category-based logic
-    const japanese = ["Acura", "Honda", "Toyota", "Lexus", "Mazda", "Nissan", "Infiniti", "Subaru", "Mitsubishi", "Suzuki", "Scion"];
-    const european = ["BMW", "Mercedes-Benz", "Audi", "Volkswagen", "Porsche", "Volvo", "Saab", "Peugeot", "Citroën", "Renault"];
-    const exotic = ["Ferrari", "Lamborghini", "Maserati", "McLaren", "Bugatti", "Aston Martin", "Bentley", "Rolls-Royce", "Maybach", "Lotus"];
+    // EV-only makes
     const ev = ["Tesla", "Rivian", "Polestar"];
-    const korean = ["Hyundai", "Kia", "Genesis"];
-    const british = ["Jaguar", "MG", "Triumph", "Austin-Healey", "Morgan", "Sunbeam", "Jensen", "Bristol", "Rover", "Land Rover", "MINI"];
-
-    let opts: string[] = [];
-
     if (ev.includes(make)) {
-      opts = ["Electric"];
-    } else if (y >= 2020) {
-      if (japanese.includes(make) || korean.includes(make)) {
-        opts = ["Inline 4-Cylinder", "Turbo 4-Cylinder", "V6", "Hybrid", "Electric"];
-      } else if (european.includes(make)) {
-        opts = ["Turbo 4-Cylinder", "Turbo V6", "V6", "V8", "Hybrid", "Electric"];
-      } else if (exotic.includes(make)) {
-        opts = ["V8", "V10", "V12", "Turbo V6", "Hybrid"];
-      } else {
-        opts = ["Turbo 4-Cylinder", "V6", "V8", "Hybrid", "Electric"];
-      }
-    } else if (y >= 2000) {
-      if (japanese.includes(make) || korean.includes(make)) {
-        opts = ["Inline 4-Cylinder", "Turbo 4-Cylinder", "V6", "Hybrid"];
-      } else if (european.includes(make)) {
-        opts = ["Inline 4-Cylinder", "Turbo 4-Cylinder", "V6", "V8", "Diesel"];
-      } else if (exotic.includes(make)) {
-        opts = ["V8", "V10", "V12"];
-      } else {
-        opts = ["Inline 4-Cylinder", "V6", "V8", "Diesel"];
-      }
-    } else if (y >= 1980) {
-      if (japanese.includes(make)) {
-        opts = ["Inline 4-Cylinder", "Turbo 4-Cylinder", "V6", "Rotary"];
-      } else if (european.includes(make) || british.includes(make)) {
-        opts = ["Inline 4-Cylinder", "Inline 6-Cylinder", "V6", "V8", "Flat 4 (Boxer)", "Diesel"];
-      } else {
-        opts = ["Inline 4-Cylinder", "V6", "V8", "Diesel"];
-      }
-    } else if (y >= 1960) {
-      if (["Chevrolet", "Pontiac", "Buick", "Oldsmobile", "Cadillac", "GM", "GMC"].includes(make)) {
-        opts = ["Inline 6-Cylinder", "V8 Small Block", "V8 Big Block", "V8"];
-      } else if (["Ford", "Mercury", "Lincoln", "Shelby"].includes(make)) {
-        opts = ["Inline 6-Cylinder", "V8 Small Block", "V8 Big Block", "V8"];
-      } else if (["Dodge", "Plymouth", "Chrysler", "Imperial"].includes(make)) {
-        opts = ["Inline 6-Cylinder", "V8", "V8 Big Block"];
-      } else if (["American Motors (AMC)", "Rambler"].includes(make)) {
-        opts = ["Inline 6-Cylinder", "V8"];
-      } else if (japanese.includes(make)) {
-        opts = ["Inline 4-Cylinder", "Inline 6-Cylinder", "Rotary"];
-      } else if (british.includes(make)) {
-        opts = ["Inline 4-Cylinder", "Inline 6-Cylinder", "V8", "V12"];
-      } else if (european.includes(make)) {
-        opts = ["Flat 4 (Boxer)", "Flat 6 (Boxer)", "Inline 4-Cylinder", "V8"];
-      } else if (exotic.includes(make)) {
-        opts = ["V6", "V8", "V12", "Flat 6 (Boxer)"];
-      } else {
-        opts = ["Inline 6-Cylinder", "V8"];
-      }
-    } else {
-      opts = ["Inline 4-Cylinder", "Inline 6-Cylinder", "Flat 4 (Boxer)", "V8", "V12"];
+      setEngines(["Electric"]);
+      return;
     }
 
-    opts.push("Other / Not Listed");
-    setEngines(opts);
+    // No specific match — show only a safe default
+    setEngines(["Unknown / Not Listed"]);
   }, [year, make, model]);
 
   const isVehicleSelected = !!(year && make && model);

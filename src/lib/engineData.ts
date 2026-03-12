@@ -575,12 +575,42 @@ const ENGINE_DB: Record<string, EngineEntry[]> = {
   ],
 
   // === AUDI ===
+  "audi|a3": [
+    [1996, 2003, ["1.8L Turbo Inline 4-Cylinder"]],
+    [2006, 2013, ["2.0L Turbo Inline 4-Cylinder", "3.2L VR6"]],
+    [2015, 2020, ["1.8L Turbo Inline 4-Cylinder", "2.0L Turbo Inline 4-Cylinder"]],
+    [2022, 2027, ["2.0L Turbo Inline 4-Cylinder"]],
+  ],
+  "audi|s3": [
+    [2015, 2020, ["2.0L Turbo Inline 4-Cylinder"]],
+    [2022, 2027, ["2.0L Turbo Inline 4-Cylinder"]],
+  ],
   "audi|a4": [
     [1996, 2001, ["1.8L Turbo Inline 4-Cylinder", "2.8L V6"]],
     [2002, 2005, ["1.8L Turbo Inline 4-Cylinder", "3.0L V6"]],
     [2006, 2008, ["2.0L Turbo Inline 4-Cylinder", "3.2L V6"]],
     [2009, 2016, ["2.0L Turbo Inline 4-Cylinder"]],
     [2017, 2027, ["2.0L Turbo Inline 4-Cylinder"]],
+  ],
+  "audi|s4": [
+    [1992, 1994, ["2.2L Turbo Inline 5-Cylinder"]],
+    [2000, 2002, ["2.7L Twin-Turbo V6"]],
+    [2004, 2008, ["4.2L V8"]],
+    [2010, 2016, ["3.0L Supercharged V6"]],
+    [2018, 2027, ["3.0L Turbo V6"]],
+  ],
+  "audi|a5": [
+    [2008, 2016, ["2.0L Turbo Inline 4-Cylinder", "3.2L V6"]],
+    [2018, 2027, ["2.0L Turbo Inline 4-Cylinder"]],
+  ],
+  "audi|s5": [
+    [2008, 2012, ["4.2L V8"]],
+    [2013, 2017, ["3.0L Supercharged V6"]],
+    [2018, 2027, ["3.0L Turbo V6"]],
+  ],
+  "audi|rs 5": [
+    [2013, 2015, ["4.2L V8"]],
+    [2018, 2027, ["2.9L Twin-Turbo V6"]],
   ],
   "audi|a6": [
     [1995, 1997, ["2.8L V6"]],
@@ -589,8 +619,295 @@ const ENGINE_DB: Record<string, EngineEntry[]> = {
     [2012, 2018, ["2.0L Turbo Inline 4-Cylinder", "3.0L Supercharged V6"]],
     [2019, 2027, ["2.0L Turbo Inline 4-Cylinder", "3.0L Turbo V6"]],
   ],
+  "audi|s6": [
+    [1995, 1997, ["2.2L Turbo Inline 5-Cylinder"]],
+    [2002, 2003, ["4.2L V8"]],
+    [2007, 2011, ["5.2L V10"]],
+    [2013, 2018, ["4.0L Twin-Turbo V8"]],
+    [2020, 2027, ["2.9L Twin-Turbo V6"]],
+  ],
+  "audi|a7": [
+    [2012, 2018, ["3.0L Supercharged V6"]],
+    [2019, 2027, ["2.0L Turbo Inline 4-Cylinder", "3.0L Turbo V6"]],
+  ],
+  "audi|s7": [
+    [2013, 2018, ["4.0L Twin-Turbo V8"]],
+    [2020, 2027, ["2.9L Twin-Turbo V6"]],
+  ],
+  "audi|rs 7": [
+    [2014, 2018, ["4.0L Twin-Turbo V8"]],
+    [2020, 2027, ["4.0L Twin-Turbo V8"]],
+  ],
+  "audi|a8 l": [
+    [1997, 2003, ["3.7L V8", "4.2L V8"]],
+    [2004, 2010, ["4.2L V8", "6.0L W12"]],
+    [2011, 2018, ["3.0L Supercharged V6", "4.0L Twin-Turbo V8", "6.3L W12"]],
+    [2019, 2027, ["3.0L Turbo V6", "4.0L Twin-Turbo V8"]],
+  ],
+  "audi|q3": [
+    [2015, 2018, ["2.0L Turbo Inline 4-Cylinder"]],
+    [2019, 2027, ["2.0L Turbo Inline 4-Cylinder"]],
+  ],
+  "audi|q5": [
+    [2009, 2017, ["2.0L Turbo Inline 4-Cylinder", "3.0L Supercharged V6", "3.0L TDI Diesel"]],
+    [2018, 2027, ["2.0L Turbo Inline 4-Cylinder"]],
+  ],
+  "audi|q5 e": [
+    [2021, 2027, ["2.0L Turbo Inline 4-Cylinder Hybrid"]],
+  ],
+  "audi|sq5": [
+    [2014, 2017, ["3.0L Supercharged V6"]],
+    [2018, 2027, ["3.0L Turbo V6"]],
+  ],
+  "audi|q6": [
+    [2025, 2027, ["Electric"]],
+  ],
+  "audi|sq6": [
+    [2025, 2027, ["Electric"]],
+  ],
+  "audi|q7": [
+    [2007, 2015, ["3.0L Supercharged V6", "3.0L TDI Diesel V6", "4.2L V8"]],
+    [2017, 2027, ["2.0L Turbo Inline 4-Cylinder", "3.0L Turbo V6"]],
+  ],
+  "audi|sq7": [
+    [2020, 2027, ["4.0L Twin-Turbo V8"]],
+  ],
+  "audi|q8": [
+    [2019, 2027, ["3.0L Turbo V6"]],
+  ],
+  "audi|sq8": [
+    [2020, 2027, ["4.0L Twin-Turbo V8"]],
+  ],
+  "audi|rs q8": [
+    [2020, 2027, ["4.0L Twin-Turbo V8"]],
+  ],
+  "audi|q4": [
+    [2022, 2027, ["Electric"]],
+  ],
+  "audi|e-tron gt": [
+    [2022, 2027, ["Electric"]],
+  ],
+  "audi|rs e-tron gt": [
+    [2022, 2027, ["Electric"]],
+  ],
+  "audi|s e-tron gt": [
+    [2025, 2027, ["Electric"]],
+  ],
+  "audi|rs 3": [
+    [2017, 2020, ["2.5L Turbo Inline 5-Cylinder"]],
+    [2022, 2027, ["2.5L Turbo Inline 5-Cylinder"]],
+  ],
+  "audi|rs 6 avant": [
+    [2021, 2027, ["4.0L Twin-Turbo V8"]],
+  ],
+  "audi|a4 allroad": [
+    [2013, 2016, ["2.0L Turbo Inline 4-Cylinder"]],
+    [2017, 2027, ["2.0L Turbo Inline 4-Cylinder"]],
+  ],
+  "audi|a6 allroad": [
+    [2020, 2027, ["3.0L Turbo V6"]],
+  ],
 
-  // === HYUNDAI / KIA / GENESIS ===
+  // === ALFA ROMEO ===
+  "alfa romeo|giulia (952)": [
+    [2017, 2027, ["2.0L Turbo Inline 4-Cylinder", "2.9L Twin-Turbo V6"]],
+  ],
+  "alfa romeo|giulia": [
+    [2017, 2027, ["2.0L Turbo Inline 4-Cylinder", "2.9L Twin-Turbo V6"]],
+  ],
+  "alfa romeo|stelvio": [
+    [2018, 2027, ["2.0L Turbo Inline 4-Cylinder", "2.9L Twin-Turbo V6"]],
+  ],
+  "alfa romeo|tonale": [
+    [2023, 2027, ["1.3L Turbo Inline 4-Cylinder Hybrid"]],
+  ],
+  "alfa romeo|4c": [
+    [2014, 2020, ["1.75L Turbo Inline 4-Cylinder"]],
+  ],
+  "alfa romeo|spider": [
+    [1966, 1993, ["1.6L Inline 4-Cylinder", "2.0L Inline 4-Cylinder"]],
+  ],
+  "alfa romeo|gtv": [
+    [1995, 2006, ["2.0L Turbo Inline 4-Cylinder", "3.0L V6", "3.2L V6"]],
+  ],
+
+  // === GENESIS ===
+  "genesis|g70": [
+    [2019, 2027, ["2.0L Turbo Inline 4-Cylinder", "3.3L Twin-Turbo V6"]],
+  ],
+  "genesis|g80": [
+    [2017, 2020, ["3.3L Twin-Turbo V6", "3.8L V6", "5.0L V8"]],
+    [2021, 2027, ["2.5L Turbo Inline 4-Cylinder", "3.5L Twin-Turbo V6"]],
+  ],
+  "genesis|g90": [
+    [2017, 2020, ["3.3L Twin-Turbo V6", "5.0L V8"]],
+    [2023, 2027, ["3.5L Twin-Turbo V6"]],
+  ],
+  "genesis|gv70": [
+    [2022, 2027, ["2.5L Turbo Inline 4-Cylinder", "3.5L Twin-Turbo V6", "Electric"]],
+  ],
+  "genesis|gv80": [
+    [2021, 2027, ["2.5L Turbo Inline 4-Cylinder", "3.5L Twin-Turbo V6"]],
+  ],
+
+  // === INFINITI ===
+  "infiniti|q50": [
+    [2014, 2027, ["2.0L Turbo Inline 4-Cylinder", "3.0L Twin-Turbo V6"]],
+  ],
+  "infiniti|q60": [
+    [2017, 2024, ["2.0L Turbo Inline 4-Cylinder", "3.0L Twin-Turbo V6"]],
+  ],
+  "infiniti|qx50": [
+    [2019, 2027, ["2.0L Turbo Inline 4-Cylinder"]],
+  ],
+  "infiniti|qx60": [
+    [2013, 2020, ["3.5L V6"]],
+    [2022, 2027, ["3.5L V6"]],
+  ],
+  "infiniti|qx80": [
+    [2011, 2027, ["5.6L V8"]],
+  ],
+  "infiniti|g35": [
+    [2003, 2007, ["3.5L V6"]],
+  ],
+  "infiniti|g37": [
+    [2008, 2013, ["3.7L V6"]],
+  ],
+
+  // === MASERATI ===
+  "maserati|ghibli": [
+    [2014, 2023, ["3.0L Twin-Turbo V6"]],
+  ],
+  "maserati|quattroporte": [
+    [2004, 2012, ["4.2L V8", "4.7L V8"]],
+    [2013, 2023, ["3.0L Twin-Turbo V6", "3.8L Twin-Turbo V8"]],
+  ],
+  "maserati|levante": [
+    [2017, 2023, ["3.0L Twin-Turbo V6", "3.8L Twin-Turbo V8"]],
+  ],
+  "maserati|granturismo": [
+    [2008, 2019, ["4.2L V8", "4.7L V8"]],
+    [2023, 2027, ["3.0L Twin-Turbo V6", "Electric"]],
+  ],
+  "maserati|mc20": [
+    [2022, 2027, ["3.0L Twin-Turbo V6"]],
+  ],
+
+  // === VOLVO ===
+  "volvo|xc90": [
+    [2003, 2014, ["3.2L Inline 6-Cylinder", "4.4L V8"]],
+    [2016, 2027, ["2.0L Turbo Inline 4-Cylinder", "2.0L Turbo+Supercharged Inline 4-Cylinder", "2.0L Hybrid"]],
+  ],
+  "volvo|xc60": [
+    [2010, 2017, ["2.0L Turbo Inline 4-Cylinder", "3.0L Turbo Inline 6-Cylinder", "3.2L Inline 6-Cylinder"]],
+    [2018, 2027, ["2.0L Turbo Inline 4-Cylinder", "2.0L Turbo+Supercharged Inline 4-Cylinder", "2.0L Hybrid"]],
+  ],
+  "volvo|xc40": [
+    [2019, 2027, ["2.0L Turbo Inline 4-Cylinder", "Electric"]],
+  ],
+  "volvo|s60": [
+    [2001, 2009, ["2.4L Inline 5-Cylinder", "2.5L Turbo Inline 5-Cylinder"]],
+    [2011, 2018, ["2.0L Turbo Inline 4-Cylinder", "2.5L Turbo Inline 5-Cylinder"]],
+    [2019, 2027, ["2.0L Turbo Inline 4-Cylinder", "2.0L Turbo+Supercharged Inline 4-Cylinder", "2.0L Hybrid"]],
+  ],
+
+  // === LAND ROVER ===
+  "land rover|range rover": [
+    [1970, 1995, ["3.5L V8", "3.9L V8", "4.2L V8"]],
+    [1996, 2001, ["4.0L V8", "4.6L V8"]],
+    [2003, 2012, ["4.4L V8", "5.0L Supercharged V8"]],
+    [2013, 2021, ["3.0L Supercharged V6", "5.0L Supercharged V8", "3.0L Diesel V6"]],
+    [2022, 2027, ["3.0L Turbo Inline 6-Cylinder", "4.4L Twin-Turbo V8"]],
+  ],
+  "land rover|range rover sport": [
+    [2006, 2013, ["4.2L Supercharged V8", "4.4L V8", "5.0L Supercharged V8"]],
+    [2014, 2022, ["3.0L Supercharged V6", "5.0L Supercharged V8"]],
+    [2023, 2027, ["3.0L Turbo Inline 6-Cylinder", "4.4L Twin-Turbo V8"]],
+  ],
+  "land rover|defender": [
+    [1983, 2016, ["2.5L Inline 4-Cylinder Diesel", "3.5L V8", "2.5L Turbo Diesel"]],
+    [2020, 2027, ["2.0L Turbo Inline 4-Cylinder", "3.0L Turbo Inline 6-Cylinder"]],
+  ],
+
+  // === JAGUAR ===
+  "jaguar|f-type": [
+    [2014, 2027, ["2.0L Turbo Inline 4-Cylinder", "3.0L Supercharged V6", "5.0L Supercharged V8"]],
+  ],
+  "jaguar|xe": [
+    [2017, 2024, ["2.0L Turbo Inline 4-Cylinder", "3.0L Supercharged V6"]],
+  ],
+  "jaguar|xf": [
+    [2009, 2015, ["2.0L Turbo Inline 4-Cylinder", "3.0L Supercharged V6", "5.0L Supercharged V8"]],
+    [2016, 2024, ["2.0L Turbo Inline 4-Cylinder", "3.0L Supercharged V6"]],
+  ],
+  "jaguar|e-type": [
+    [1961, 1971, ["3.8L Inline 6-Cylinder", "4.2L Inline 6-Cylinder"]],
+    [1971, 1975, ["5.3L V12"]],
+  ],
+  "jaguar|xk": [
+    [1996, 2005, ["4.0L V8", "4.0L Supercharged V8"]],
+    [2006, 2014, ["4.2L V8", "5.0L Supercharged V8"]],
+  ],
+
+  // === LINCOLN ===
+  "lincoln|navigator": [
+    [1998, 2002, ["5.4L V8"]],
+    [2003, 2006, ["5.4L V8"]],
+    [2007, 2017, ["5.4L V8"]],
+    [2018, 2027, ["3.5L Twin-Turbo V6"]],
+  ],
+  "lincoln|aviator": [
+    [2020, 2027, ["3.0L Twin-Turbo V6", "3.0L Twin-Turbo V6 Hybrid"]],
+  ],
+  "lincoln|corsair": [
+    [2020, 2027, ["2.0L Turbo Inline 4-Cylinder", "2.5L Hybrid"]],
+  ],
+
+  // === CADILLAC ===
+  "cadillac|escalade": [
+    [1999, 2006, ["5.3L V8", "6.0L V8", "6.2L V8"]],
+    [2007, 2014, ["6.2L V8"]],
+    [2015, 2020, ["6.2L V8"]],
+    [2021, 2027, ["6.2L V8", "3.0L Turbo Diesel"]],
+  ],
+  "cadillac|ct5": [
+    [2020, 2027, ["2.0L Turbo Inline 4-Cylinder", "3.0L Twin-Turbo V6"]],
+  ],
+  "cadillac|ct4": [
+    [2020, 2027, ["2.0L Turbo Inline 4-Cylinder", "2.7L Turbo Inline 4-Cylinder"]],
+  ],
+  "cadillac|xt5": [
+    [2017, 2027, ["2.0L Turbo Inline 4-Cylinder", "3.6L V6"]],
+  ],
+
+  // === GMC ===
+  "gmc|sierra": [
+    [1999, 2006, ["4.3L V6", "4.8L V8", "5.3L V8", "6.0L V8"]],
+    [2007, 2013, ["4.3L V6", "4.8L V8", "5.3L V8", "6.0L V8", "6.2L V8"]],
+    [2014, 2018, ["4.3L V6", "5.3L V8", "6.2L V8"]],
+    [2019, 2027, ["2.7L Turbo Inline 4-Cylinder", "4.3L V6", "5.3L V8", "6.2L V8", "3.0L Turbo Diesel"]],
+  ],
+  "gmc|yukon": [
+    [1995, 2006, ["4.8L V8", "5.3L V8", "6.0L V8"]],
+    [2007, 2014, ["5.3L V8", "6.0L V8", "6.2L V8"]],
+    [2015, 2020, ["5.3L V8", "6.2L V8"]],
+    [2021, 2027, ["5.3L V8", "6.2L V8", "3.0L Turbo Diesel"]],
+  ],
+
+  // === RAM ===
+  "ram trucks|1500": [
+    [2011, 2018, ["3.0L Turbo Diesel V6", "3.6L V6", "5.7L Hemi V8"]],
+    [2019, 2027, ["3.0L Turbo Diesel V6", "3.6L V6", "5.7L Hemi V8", "3.6L Hybrid V6"]],
+  ],
+
+  // === MINI ===
+  "mini|cooper": [
+    [2002, 2006, ["1.6L Inline 4-Cylinder", "1.6L Supercharged Inline 4-Cylinder"]],
+    [2007, 2013, ["1.6L Inline 4-Cylinder", "1.6L Turbo Inline 4-Cylinder"]],
+    [2014, 2027, ["1.5L Turbo Inline 3-Cylinder", "2.0L Turbo Inline 4-Cylinder"]],
+  ],
+
+  // === HYUNDAI / KIA / GENESIS (continued) ===
   "hyundai|elantra": [
     [1992, 1995, ["1.6L Inline 4-Cylinder", "1.8L Inline 4-Cylinder"]],
     [1996, 2000, ["1.8L Inline 4-Cylinder", "2.0L Inline 4-Cylinder"]],
@@ -608,6 +925,22 @@ const ENGINE_DB: Record<string, EngineEntry[]> = {
     [2015, 2019, ["1.6L Turbo Inline 4-Cylinder", "2.0L Turbo Inline 4-Cylinder", "2.4L Inline 4-Cylinder"]],
     [2020, 2027, ["1.6L Turbo Inline 4-Cylinder", "2.5L Inline 4-Cylinder", "2.5L Turbo Inline 4-Cylinder"]],
   ],
+  "hyundai|tucson": [
+    [2005, 2009, ["2.0L Inline 4-Cylinder", "2.7L V6"]],
+    [2010, 2015, ["2.0L Inline 4-Cylinder", "2.4L Inline 4-Cylinder"]],
+    [2016, 2021, ["1.6L Turbo Inline 4-Cylinder", "2.0L Inline 4-Cylinder"]],
+    [2022, 2027, ["2.5L Inline 4-Cylinder", "1.6L Turbo Hybrid"]],
+  ],
+  "hyundai|santa fe": [
+    [2001, 2006, ["2.4L Inline 4-Cylinder", "2.7L V6", "3.5L V6"]],
+    [2007, 2012, ["2.4L Inline 4-Cylinder", "3.3L V6"]],
+    [2013, 2018, ["2.0L Turbo Inline 4-Cylinder", "2.4L Inline 4-Cylinder", "3.3L V6"]],
+    [2019, 2023, ["2.0L Turbo Inline 4-Cylinder", "2.5L Inline 4-Cylinder"]],
+    [2024, 2027, ["2.5L Turbo Inline 4-Cylinder", "1.6L Turbo Hybrid"]],
+  ],
+  "hyundai|palisade": [
+    [2020, 2027, ["3.8L V6"]],
+  ],
   "kia|optima": [
     [2001, 2006, ["2.4L Inline 4-Cylinder", "2.7L V6"]],
     [2007, 2010, ["2.4L Inline 4-Cylinder", "2.7L V6"]],
@@ -616,6 +949,74 @@ const ENGINE_DB: Record<string, EngineEntry[]> = {
   ],
   "kia|k5": [
     [2021, 2027, ["1.6L Turbo Inline 4-Cylinder", "2.5L Inline 4-Cylinder", "2.5L Turbo Inline 4-Cylinder"]],
+  ],
+  "kia|sorento": [
+    [2003, 2009, ["2.4L Inline 4-Cylinder", "3.3L V6", "3.5L V6"]],
+    [2011, 2015, ["2.4L Inline 4-Cylinder", "3.3L V6"]],
+    [2016, 2020, ["2.0L Turbo Inline 4-Cylinder", "2.4L Inline 4-Cylinder", "3.3L V6"]],
+    [2021, 2027, ["2.5L Inline 4-Cylinder", "2.5L Turbo Inline 4-Cylinder", "1.6L Turbo Hybrid"]],
+  ],
+  "kia|telluride": [
+    [2020, 2027, ["3.8L V6"]],
+  ],
+  "kia|sportage": [
+    [2005, 2010, ["2.0L Inline 4-Cylinder", "2.7L V6"]],
+    [2011, 2016, ["2.0L Inline 4-Cylinder", "2.4L Inline 4-Cylinder"]],
+    [2017, 2022, ["2.0L Inline 4-Cylinder", "2.4L Inline 4-Cylinder"]],
+    [2023, 2027, ["2.5L Inline 4-Cylinder", "2.5L Turbo Inline 4-Cylinder", "1.6L Turbo Hybrid"]],
+  ],
+  "kia|stinger": [
+    [2018, 2023, ["2.0L Turbo Inline 4-Cylinder", "3.3L Twin-Turbo V6"]],
+  ],
+
+  // === MITSUBISHI ===
+  "mitsubishi|eclipse": [
+    [1990, 1994, ["1.8L Inline 4-Cylinder", "2.0L Turbo Inline 4-Cylinder"]],
+    [1995, 1999, ["2.0L Inline 4-Cylinder", "2.0L Turbo Inline 4-Cylinder"]],
+    [2000, 2005, ["2.4L Inline 4-Cylinder", "3.0L V6"]],
+    [2006, 2012, ["2.4L Inline 4-Cylinder", "3.8L V6"]],
+  ],
+  "mitsubishi|lancer": [
+    [2002, 2007, ["2.0L Inline 4-Cylinder", "2.4L Inline 4-Cylinder"]],
+    [2008, 2017, ["2.0L Inline 4-Cylinder", "2.4L Inline 4-Cylinder"]],
+  ],
+  "mitsubishi|outlander": [
+    [2003, 2006, ["2.4L Inline 4-Cylinder"]],
+    [2007, 2013, ["2.4L Inline 4-Cylinder", "3.0L V6"]],
+    [2014, 2021, ["2.4L Inline 4-Cylinder", "3.0L V6"]],
+    [2022, 2027, ["2.5L Inline 4-Cylinder", "2.4L Hybrid"]],
+  ],
+  "mitsubishi|evo": [
+    [2003, 2015, ["2.0L Turbo Inline 4-Cylinder"]],
+  ],
+  "mitsubishi|3000gt": [
+    [1991, 1999, ["3.0L V6", "3.0L Twin-Turbo V6"]],
+  ],
+
+  // === ASTON MARTIN ===
+  "aston martin|db11": [
+    [2017, 2024, ["4.0L Twin-Turbo V8", "5.2L Twin-Turbo V12"]],
+  ],
+  "aston martin|db12": [
+    [2024, 2027, ["4.0L Twin-Turbo V8"]],
+  ],
+  "aston martin|vantage": [
+    [2006, 2017, ["4.3L V8", "4.7L V8", "6.0L V12"]],
+    [2019, 2027, ["4.0L Twin-Turbo V8"]],
+  ],
+
+  // === McLAREN ===
+  "mclaren|720s": [
+    [2018, 2024, ["4.0L Twin-Turbo V8"]],
+  ],
+  "mclaren|570s": [
+    [2016, 2021, ["3.8L Twin-Turbo V8"]],
+  ],
+  "mclaren|gt": [
+    [2020, 2027, ["4.0L Twin-Turbo V8"]],
+  ],
+  "mclaren|artura": [
+    [2022, 2027, ["3.0L Twin-Turbo V6 Hybrid"]],
   ],
 
   // === FERRARI ===
@@ -640,6 +1041,12 @@ const ENGINE_DB: Record<string, EngineEntry[]> = {
   "ferrari|812 superfast": [
     [2018, 2023, ["6.5L V12"]],
   ],
+  "ferrari|roma": [
+    [2020, 2027, ["3.9L Twin-Turbo V8"]],
+  ],
+  "ferrari|sf90 stradale": [
+    [2020, 2027, ["4.0L Twin-Turbo V8 Hybrid"]],
+  ],
 
   // === LAMBORGHINI ===
   "lamborghini|huracán": [
@@ -656,6 +1063,79 @@ const ENGINE_DB: Record<string, EngineEntry[]> = {
   ],
   "lamborghini|murciélago": [
     [2002, 2010, ["6.2L V12", "6.5L V12"]],
+  ],
+  "lamborghini|urus": [
+    [2019, 2027, ["4.0L Twin-Turbo V8"]],
+  ],
+  "lamborghini|revuelto": [
+    [2024, 2027, ["6.5L V12 Hybrid"]],
+  ],
+
+  // === DODGE (additional) ===
+  "dodge|durango": [
+    [1998, 2003, ["3.9L V6", "4.7L V8", "5.2L V8", "5.9L V8"]],
+    [2004, 2009, ["3.7L V6", "4.7L V8", "5.7L Hemi V8"]],
+    [2011, 2027, ["3.6L V6", "5.7L Hemi V8", "6.4L Hemi V8"]],
+  ],
+  "dodge|ram 1500": [
+    [1994, 2001, ["3.9L V6", "5.2L V8", "5.9L V8"]],
+    [2002, 2008, ["3.7L V6", "4.7L V8", "5.7L Hemi V8"]],
+    [2009, 2018, ["3.6L V6", "5.7L Hemi V8"]],
+  ],
+
+  // === BUICK ===
+  "buick|enclave": [
+    [2008, 2017, ["3.6L V6"]],
+    [2018, 2027, ["3.6L V6"]],
+  ],
+  "buick|encore": [
+    [2013, 2022, ["1.4L Turbo Inline 4-Cylinder"]],
+  ],
+  "buick|encore gx": [
+    [2020, 2027, ["1.2L Turbo Inline 3-Cylinder", "1.3L Turbo Inline 3-Cylinder"]],
+  ],
+
+  // === CHRYSLER ===
+  "chrysler|300": [
+    [2005, 2010, ["2.7L V6", "3.5L V6", "5.7L Hemi V8", "6.1L Hemi V8"]],
+    [2011, 2023, ["3.6L V6", "5.7L Hemi V8", "6.4L Hemi V8"]],
+  ],
+  "chrysler|pacifica": [
+    [2017, 2027, ["3.6L V6", "3.6L V6 Hybrid"]],
+  ],
+
+  // === NISSAN (additional) ===
+  "nissan|maxima": [
+    [1995, 1999, ["3.0L V6"]],
+    [2000, 2003, ["3.0L V6", "3.5L V6"]],
+    [2004, 2008, ["3.5L V6"]],
+    [2009, 2023, ["3.5L V6"]],
+  ],
+  "nissan|sentra": [
+    [2000, 2006, ["1.8L Inline 4-Cylinder", "2.5L Inline 4-Cylinder"]],
+    [2007, 2012, ["2.0L Inline 4-Cylinder", "2.5L Inline 4-Cylinder"]],
+    [2013, 2019, ["1.8L Inline 4-Cylinder"]],
+    [2020, 2027, ["2.0L Inline 4-Cylinder"]],
+  ],
+  "nissan|rogue": [
+    [2008, 2013, ["2.5L Inline 4-Cylinder"]],
+    [2014, 2020, ["2.5L Inline 4-Cylinder"]],
+    [2021, 2027, ["1.5L Turbo Inline 3-Cylinder"]],
+  ],
+  "nissan|pathfinder": [
+    [1996, 2004, ["3.3L V6", "3.5L V6"]],
+    [2005, 2012, ["4.0L V6", "5.6L V8"]],
+    [2013, 2020, ["3.5L V6"]],
+    [2022, 2027, ["3.5L V6"]],
+  ],
+  "nissan|frontier": [
+    [1998, 2004, ["2.4L Inline 4-Cylinder", "3.3L V6"]],
+    [2005, 2021, ["2.5L Inline 4-Cylinder", "4.0L V6"]],
+    [2022, 2027, ["3.8L V6"]],
+  ],
+  "nissan|titan": [
+    [2004, 2015, ["5.6L V8"]],
+    [2016, 2027, ["5.0L Turbo Diesel V8", "5.6L V8"]],
   ],
 };
 

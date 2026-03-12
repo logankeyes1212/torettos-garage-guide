@@ -4,8 +4,11 @@ import SplashScreen from "@/components/SplashScreen";
 import VehicleSelector from "@/components/VehicleSelector";
 import SearchBar from "@/components/SearchBar";
 import SearchResults from "@/components/SearchResults";
+import SavedVehiclesDropdown from "@/components/SavedVehiclesDropdown";
 import { useVehicleData } from "@/hooks/useVehicleData";
 import { useVehicleImage } from "@/hooks/useVehicleImage";
+import { useSavedVehicles } from "@/hooks/useSavedVehicles";
+import { useAuth } from "@/contexts/AuthContext";
 import defaultHeroImage from "@/assets/charger-burnout-hero.jpg";
 import { Flame, Gauge, Wrench } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -53,6 +56,22 @@ const Index = () => {
   const heroImage = vehicleImageUrl || defaultHeroImage;
   const resultsRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  const { user } = useAuth();
+  const { saveVehicle } = useSavedVehicles();
+
+  const handleSavedVehicleSelect = (v: { year: string; make: string; model: string; engine: string | null }) => {
+    vehicleData.setYear(v.year);
+    // Need a slight delay so makes populate before setting make
+    setTimeout(() => {
+      vehicleData.setMake(v.make);
+      setTimeout(() => {
+        vehicleData.setModel(v.model);
+        setTimeout(() => {
+          if (v.engine) vehicleData.setEngine(v.engine);
+        }, 200);
+      }, 200);
+    }, 100);
+  };
 
   const vehicleLabel = [vehicleData.year, vehicleData.make, vehicleData.model, vehicleData.engine]
     .filter(Boolean)
@@ -63,6 +82,16 @@ const Index = () => {
     setSearchResult(null);
     setLastSearchedIssue(query);
     setSelectedCause(null);
+
+    // Save vehicle to user's garage if logged in
+    if (user && vehicleData.isVehicleSelected) {
+      saveVehicle({
+        year: vehicleData.year,
+        make: vehicleData.make,
+        model: vehicleData.model,
+        engine: vehicleData.engine,
+      });
+    }
 
     try {
       const { data, error } = await supabase.functions.invoke("repair-search", {
@@ -163,13 +192,18 @@ const Index = () => {
             </p>
           </motion.div>
 
-          {/* Vehicle Selector */}
+          {/* Saved Vehicles & Vehicle Selector */}
           <motion.div
             className="mb-10"
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
+            {user && (
+              <div className="flex justify-center mb-4">
+                <SavedVehiclesDropdown onSelect={handleSavedVehicleSelect} />
+              </div>
+            )}
             <VehicleSelector vehicleData={vehicleData} />
           </motion.div>
 

@@ -1,15 +1,17 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, ShoppingBag, LogIn, Wrench } from "lucide-react";
+import { Home, ShoppingBag, LogIn, LogOut, Wrench, User } from "lucide-react";
 import { motion } from "framer-motion";
-
-const navItems = [
-  { to: "/", label: "Home", icon: Home },
-  { to: "/marketplace", label: "Marketplace", icon: ShoppingBag },
-  { to: "/auth", label: "Sign In", icon: LogIn },
-];
+import { useAuth } from "@/contexts/AuthContext";
+import { Button } from "@/components/ui/button";
 
 const Navbar = () => {
   const location = useLocation();
+  const { user, signOut } = useAuth();
+
+  const navItems = [
+    { to: "/", label: "Home", icon: Home },
+    { to: "/marketplace", label: "Marketplace", icon: ShoppingBag },
+  ];
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-40 bg-background/80 backdrop-blur-md border-b border-border">
@@ -43,6 +45,38 @@ const Navbar = () => {
               </Link>
             );
           })}
+
+          {user ? (
+            <div className="flex items-center gap-2 ml-2">
+              <span className="hidden sm:inline text-sm font-condensed text-muted-foreground truncate max-w-[120px]">
+                {user.user_metadata?.display_name || user.email}
+              </span>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => signOut()}
+                className="font-condensed uppercase tracking-wider text-xs gap-1"
+              >
+                <LogOut className="w-4 h-4" />
+                <span className="hidden sm:inline">Sign Out</span>
+              </Button>
+            </div>
+          ) : (
+            <Link
+              to="/auth"
+              className="relative px-4 py-2 flex items-center gap-2 text-sm font-condensed font-semibold uppercase tracking-wider transition-colors hover:text-primary"
+            >
+              <LogIn className="w-4 h-4" />
+              <span className="hidden sm:inline">Sign In</span>
+              {location.pathname === "/auth" && (
+                <motion.div
+                  layoutId="nav-underline"
+                  className="absolute bottom-0 left-2 right-2 h-0.5 bg-primary"
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                />
+              )}
+            </Link>
+          )}
         </div>
       </div>
     </nav>

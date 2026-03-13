@@ -895,9 +895,19 @@ const ENGINE_DB: Record<string, EngineEntry[]> = {
   ],
 
   // === RAM ===
-  "ram trucks|1500": [
+  "ram|1500": [
     [2011, 2018, ["3.0L Turbo Diesel V6", "3.6L V6", "5.7L Hemi V8"]],
     [2019, 2027, ["3.0L Turbo Diesel V6", "3.6L V6", "5.7L Hemi V8", "3.6L Hybrid V6"]],
+  ],
+  "ram|2500": [
+    [2003, 2009, ["5.7L Hemi V8", "5.9L Cummins Turbo Diesel"]],
+    [2010, 2018, ["5.7L Hemi V8", "6.4L Hemi V8", "6.7L Cummins Turbo Diesel"]],
+    [2019, 2027, ["6.4L Hemi V8", "6.7L Cummins Turbo Diesel"]],
+  ],
+  "ram|3500": [
+    [2003, 2009, ["5.7L Hemi V8", "5.9L Cummins Turbo Diesel"]],
+    [2010, 2018, ["5.7L Hemi V8", "6.4L Hemi V8", "6.7L Cummins Turbo Diesel"]],
+    [2019, 2027, ["6.4L Hemi V8", "6.7L Cummins Turbo Diesel"]],
   ],
 
   // === MINI ===

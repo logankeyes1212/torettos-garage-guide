@@ -151,7 +151,7 @@ export const useVehicleData = () => {
     setEngine("");
   }, [year]);
 
-  // Fetch models from NHTSA — only models produced that specific year
+  // Fetch models from NHTSA — US-market only for modern vehicles, all models for 25+ year old (import rule)
   useEffect(() => {
     if (!year || !make) {
       setModels([]);
@@ -164,23 +164,60 @@ export const useVehicleData = () => {
     setEngine("");
 
     const yearNum = parseInt(year);
+    const currentYear = new Date().getFullYear();
+    const isImportEligible = (currentYear - yearNum) >= 25;
 
-    // Try NHTSA API first
-    fetch(
-      `https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/${encodeURIComponent(make)}/modelyear/${year}?format=json`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        const names = (data.Results || [])
+    // For modern US-market vehicles, use vehicle type filter to exclude motorcycles/ATVs/trailers
+    // For 25+ year old vehicles (import eligible), show all models
+    const buildUrl = () => {
+      const base = `https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/${encodeURIComponent(make)}/modelyear/${year}`;
+      if (isImportEligible) {
+        return `${base}?format=json`;
+      }
+      // Filter to passenger cars and multipurpose vehicles (SUVs/trucks) for modern US-market
+      return `${base}/vehicletype/passenger%20car?format=json`;
+    };
+
+    const fetchModels = async () => {
+      try {
+        const results: string[] = [];
+
+        // Fetch passenger cars
+        const carRes = await fetch(buildUrl());
+        const carData = await carRes.json();
+        const carNames = (carData.Results || [])
           .map((m: VehicleModel) => m.Model_Name)
-          .filter((n: string) => n && n.length < 40)
-          .sort((a: string, b: string) => a.localeCompare(b));
-        const unique = [...new Set(names)] as string[];
+          .filter((n: string) => n && n.length < 40);
+        results.push(...carNames);
+
+        // For modern vehicles, also fetch trucks/MPVs/SUVs
+        if (!isImportEligible) {
+          try {
+            const truckUrl = `https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/${encodeURIComponent(make)}/modelyear/${year}/vehicletype/multipurpose%20passenger%20vehicle%20(mpv)?format=json`;
+            const truckRes = await fetch(truckUrl);
+            const truckData = await truckRes.json();
+            const truckNames = (truckData.Results || [])
+              .map((m: VehicleModel) => m.Model_Name)
+              .filter((n: string) => n && n.length < 40);
+            results.push(...truckNames);
+          } catch { /* ignore */ }
+
+          try {
+            const pickupUrl = `https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/${encodeURIComponent(make)}/modelyear/${year}/vehicletype/truck?format=json`;
+            const pickupRes = await fetch(pickupUrl);
+            const pickupData = await pickupRes.json();
+            const pickupNames = (pickupData.Results || [])
+              .map((m: VehicleModel) => m.Model_Name)
+              .filter((n: string) => n && n.length < 40);
+            results.push(...pickupNames);
+          } catch { /* ignore */ }
+        }
+
+        const unique = [...new Set(results)].sort((a, b) => a.localeCompare(b));
 
         if (unique.length > 0) {
           setModels(unique);
         } else {
-          // Fallback to curated classic models
           const classic = getClassicModels(yearNum, make);
           if (classic && classic.length > 0) {
             setModels([...classic, "Other / Custom"]);
@@ -188,16 +225,19 @@ export const useVehicleData = () => {
             setModels(["Other / Custom"]);
           }
         }
-      })
-      .catch(() => {
+      } catch {
         const classic = getClassicModels(yearNum, make);
         if (classic && classic.length > 0) {
           setModels([...classic, "Other / Custom"]);
         } else {
           setModels(["Other / Custom"]);
         }
-      })
-      .finally(() => setLoadingModels(false));
+      } finally {
+        setLoadingModels(false);
+      }
+    };
+
+    fetchModels();
   }, [year, make]);
 
   // Determine engine options based on make/year/model

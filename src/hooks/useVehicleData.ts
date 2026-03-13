@@ -34,7 +34,7 @@ const CLASSIC_MAKES: [string, number, number][] = [
   ["Chrysler", 1924, 2027],
   ["Citroën", 1919, 2027],
   ["Cord", 1929, 1937],
-  ["Corvette", 1953, 2027],
+  
   ["DeSoto", 1928, 1961],
   ["Dodge", 1914, 2027],
   ["Duesenberg", 1913, 1937],

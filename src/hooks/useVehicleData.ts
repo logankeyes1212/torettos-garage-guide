@@ -46,7 +46,7 @@ const CLASSIC_MAKES: [string, number, number][] = [
   ["Franklin", 1902, 1934],
   ["Fraser", 1945, 1951],
   ["GEO", 1989, 1997],
-  ["GM", 1908, 2027],
+  
   ["GMC", 1912, 2027],
   ["Graham", 1928, 1941],
   ["Hudson", 1909, 1957],

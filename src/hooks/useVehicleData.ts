@@ -111,7 +111,7 @@ const CLASSIC_MAKES: [string, number, number][] = [
   ["Lexus", 1989, 2027],
   ["MINI", 1959, 2027],
   ["Polestar", 2017, 2027],
-  ["Ram Trucks", 2010, 2027],
+  
   ["Rivian", 2021, 2027],
   ["Scion", 2003, 2016],
   ["Tesla", 2008, 2027],

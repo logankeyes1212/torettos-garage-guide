@@ -34,7 +34,7 @@ const CLASSIC_MAKES: [string, number, number][] = [
   ["Chrysler", 1924, 2027],
   ["Citroën", 1919, 2027],
   ["Cord", 1929, 1937],
-  ["Corvette", 1953, 2027],
+  
   ["DeSoto", 1928, 1961],
   ["Dodge", 1914, 2027],
   ["Duesenberg", 1913, 1937],
@@ -46,7 +46,7 @@ const CLASSIC_MAKES: [string, number, number][] = [
   ["Franklin", 1902, 1934],
   ["Fraser", 1945, 1951],
   ["GEO", 1989, 1997],
-  ["GM", 1908, 2027],
+  
   ["GMC", 1912, 2027],
   ["Graham", 1928, 1941],
   ["Hudson", 1909, 1957],
@@ -75,7 +75,7 @@ const CLASSIC_MAKES: [string, number, number][] = [
   ["Nissan", 1933, 2027],
   ["Oldsmobile", 1897, 2004],
   ["Packard", 1899, 1958],
-  ["Pantera", 1970, 1992],
+  ["De Tomaso", 1959, 2004],
   ["Peugeot", 1889, 2027],
   ["Pierce-Arrow", 1901, 1938],
   ["Plymouth", 1928, 2001],
@@ -111,7 +111,7 @@ const CLASSIC_MAKES: [string, number, number][] = [
   ["Lexus", 1989, 2027],
   ["MINI", 1959, 2027],
   ["Polestar", 2017, 2027],
-  ["Ram Trucks", 2010, 2027],
+  
   ["Rivian", 2021, 2027],
   ["Scion", 2003, 2016],
   ["Tesla", 2008, 2027],

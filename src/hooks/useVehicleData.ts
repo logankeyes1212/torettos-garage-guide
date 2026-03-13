@@ -75,7 +75,7 @@ const CLASSIC_MAKES: [string, number, number][] = [
   ["Nissan", 1933, 2027],
   ["Oldsmobile", 1897, 2004],
   ["Packard", 1899, 1958],
-  ["Pantera", 1970, 1992],
+  ["De Tomaso", 1959, 2004],
   ["Peugeot", 1889, 2027],
   ["Pierce-Arrow", 1901, 1938],
   ["Plymouth", 1928, 2001],

@@ -151,9 +151,8 @@ const Index = () => {
     }
   };
 
-  if (!splashDone) {
-    return <SplashScreen onComplete={() => setSplashDone(true)} />;
-  }
+
+
 
   return (
     <div className="min-h-screen pt-16">

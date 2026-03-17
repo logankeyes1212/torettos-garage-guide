@@ -1508,6 +1508,11 @@ const ENGINE_DB: Record<string, EngineEntry[]> = {
     [2003, 2018, ["6.0L Twin-Turbo W12", "4.0L Twin-Turbo V8"]],
     [2019, 2027, ["6.0L Twin-Turbo W12", "4.0L Twin-Turbo V8"]],
   ],
+  // NHTSA returns "Continental" without "GT" — alias
+  "bentley|continental": [
+    [2003, 2018, ["6.0L Twin-Turbo W12", "4.0L Twin-Turbo V8"]],
+    [2019, 2027, ["6.0L Twin-Turbo W12", "4.0L Twin-Turbo V8"]],
+  ],
   "bentley|flying spur": [
     [2005, 2019, ["6.0L Twin-Turbo W12"]],
     [2020, 2027, ["6.0L Twin-Turbo W12", "4.0L Twin-Turbo V8"]],

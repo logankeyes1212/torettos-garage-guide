@@ -45,7 +45,7 @@ interface RepairResult {
 }
 
 const Index = () => {
-  const [splashDone, setSplashDone] = useState(false);
+  
   const [isSearching, setIsSearching] = useState(false);
   const [searchResult, setSearchResult] = useState<RepairResult | null>(null);
   const [lastSearchedIssue, setLastSearchedIssue] = useState("");

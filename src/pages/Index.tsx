@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import SplashScreen from "@/components/SplashScreen";
+import SpinningWheel from "@/components/SpinningWheel";
 import VehicleSelector from "@/components/VehicleSelector";
 import SearchBar from "@/components/SearchBar";
 import SearchResults from "@/components/SearchResults";
@@ -45,7 +45,7 @@ interface RepairResult {
 }
 
 const Index = () => {
-  const [splashDone, setSplashDone] = useState(false);
+  
   const [isSearching, setIsSearching] = useState(false);
   const [searchResult, setSearchResult] = useState<RepairResult | null>(null);
   const [lastSearchedIssue, setLastSearchedIssue] = useState("");
@@ -151,9 +151,8 @@ const Index = () => {
     }
   };
 
-  if (!splashDone) {
-    return <SplashScreen onComplete={() => setSplashDone(true)} />;
-  }
+
+
 
   return (
     <div className="min-h-screen pt-16">
@@ -228,12 +227,7 @@ const Index = () => {
         <section className="py-10 px-4" ref={resultsRef}>
           <div className="container mx-auto">
             {isSearching ? (
-              <div className="flex flex-col items-center justify-center py-20 space-y-4">
-                <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-                <p className="font-condensed text-muted-foreground uppercase tracking-wider">
-                  Consulting Dominic Toretto...
-                </p>
-              </div>
+              <SpinningWheel />
             ) : searchResult ? (
               <SearchResults
                 vehicle={vehicleLabel}

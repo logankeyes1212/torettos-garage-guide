@@ -1,8 +1,17 @@
 import { motion } from "framer-motion";
-import { ShoppingBag, Plus } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useMarketplaceListings } from "@/hooks/useMarketplaceListings";
+import CreateListingDialog from "@/components/CreateListingDialog";
+import ListingCard from "@/components/ListingCard";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 const Marketplace = () => {
+  const { user } = useAuth();
+  const { listings, isLoading, refetch } = useMarketplaceListings();
+
   return (
     <div className="min-h-screen pt-16">
       <section className="py-20 px-4">
@@ -22,31 +31,37 @@ const Marketplace = () => {
           </motion.div>
 
           <div className="flex justify-center mb-12">
-            <Button className="font-heading uppercase tracking-wider">
-              <Plus className="w-5 h-5 mr-2" /> Create Listing
-            </Button>
+            {user ? (
+              <CreateListingDialog onCreated={refetch} />
+            ) : (
+              <Link to="/auth">
+                <Button className="font-heading uppercase tracking-wider">
+                  Sign In to Create Listing
+                </Button>
+              </Link>
+            )}
           </div>
 
-          {/* Placeholder for listings */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3].map((i) => (
-              <motion.div
-                key={i}
-                className="rounded-lg bg-card border border-border p-6 hover:border-primary/40 transition-colors"
-                initial={{ y: 30, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: i * 0.1 }}
-              >
-                <div className="h-48 bg-secondary rounded-md mb-4 flex items-center justify-center">
-                  <ShoppingBag className="w-12 h-12 text-muted-foreground/30" />
-                </div>
-                <h3 className="font-heading text-lg font-bold uppercase mb-1">Coming Soon</h3>
-                <p className="text-sm text-muted-foreground">
-                  Marketplace listings will appear here. Sign in to create one.
-                </p>
-              </motion.div>
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3].map((i) => (
+                <Skeleton key={i} className="h-72 rounded-lg" />
+              ))}
+            </div>
+          ) : listings.length === 0 ? (
+            <div className="text-center py-16">
+              <ShoppingBag className="w-16 h-16 text-muted-foreground/20 mx-auto mb-4" />
+              <p className="text-muted-foreground font-condensed uppercase tracking-wide">
+                No listings yet. Be the first to create one!
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {listings.map((listing, i) => (
+                <ListingCard key={listing.id} listing={listing} index={i} onUpdated={refetch} />
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </div>

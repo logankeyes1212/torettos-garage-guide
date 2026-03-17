@@ -437,6 +437,122 @@ const ENGINE_DB: Record<string, EngineEntry[]> = {
     [2015, 2018, ["3.0L Twin-Turbo Inline 6-Cylinder"]],
     [2021, 2027, ["3.0L Twin-Turbo Inline 6-Cylinder"]],
   ],
+  "bmw|m2": [
+    [2016, 2021, ["3.0L Twin-Turbo Inline 6-Cylinder"]],
+    [2023, 2027, ["3.0L Twin-Turbo Inline 6-Cylinder"]],
+  ],
+  "bmw|m4": [
+    [2015, 2020, ["3.0L Twin-Turbo Inline 6-Cylinder"]],
+    [2021, 2027, ["3.0L Twin-Turbo Inline 6-Cylinder"]],
+  ],
+  "bmw|m8": [
+    [2020, 2027, ["4.4L Twin-Turbo V8"]],
+  ],
+  "bmw|228i": [
+    [2014, 2021, ["2.0L Turbo Inline 4-Cylinder"]],
+  ],
+  "bmw|230i": [
+    [2017, 2027, ["2.0L Turbo Inline 4-Cylinder"]],
+  ],
+  "bmw|m235i": [
+    [2014, 2021, ["3.0L Turbo Inline 6-Cylinder"]],
+  ],
+  "bmw|m240i": [
+    [2017, 2027, ["3.0L Turbo Inline 6-Cylinder"]],
+  ],
+  "bmw|330i": [
+    [2001, 2005, ["3.0L Inline 6-Cylinder"]],
+    [2019, 2027, ["2.0L Turbo Inline 4-Cylinder"]],
+  ],
+  "bmw|330e": [
+    [2016, 2027, ["2.0L Turbo Inline 4-Cylinder Hybrid"]],
+  ],
+  "bmw|m340i": [
+    [2020, 2027, ["3.0L Turbo Inline 6-Cylinder"]],
+  ],
+  "bmw|340i": [
+    [2016, 2018, ["3.0L Turbo Inline 6-Cylinder"]],
+  ],
+  "bmw|430i": [
+    [2017, 2027, ["2.0L Turbo Inline 4-Cylinder"]],
+  ],
+  "bmw|m440i": [
+    [2021, 2027, ["3.0L Turbo Inline 6-Cylinder"]],
+  ],
+  "bmw|530i": [
+    [2017, 2027, ["2.0L Turbo Inline 4-Cylinder"]],
+  ],
+  "bmw|540i": [
+    [2017, 2027, ["3.0L Turbo Inline 6-Cylinder"]],
+  ],
+  "bmw|740i": [
+    [2016, 2027, ["3.0L Turbo Inline 6-Cylinder"]],
+  ],
+  "bmw|750e": [
+    [2023, 2027, ["3.0L Turbo Inline 6-Cylinder Hybrid"]],
+  ],
+  "bmw|760i": [
+    [2023, 2027, ["4.4L Twin-Turbo V8"]],
+  ],
+  "bmw|840i": [
+    [2019, 2027, ["3.0L Turbo Inline 6-Cylinder"]],
+  ],
+  "bmw|m850i": [
+    [2019, 2027, ["4.4L Twin-Turbo V8"]],
+  ],
+  "bmw|alpina b8": [
+    [2022, 2027, ["4.4L Twin-Turbo V8"]],
+  ],
+  "bmw|z4": [
+    [2003, 2008, ["2.5L Inline 6-Cylinder", "3.0L Inline 6-Cylinder"]],
+    [2009, 2016, ["2.0L Turbo Inline 4-Cylinder", "3.0L Turbo Inline 6-Cylinder"]],
+    [2019, 2027, ["2.0L Turbo Inline 4-Cylinder", "3.0L Turbo Inline 6-Cylinder"]],
+  ],
+  "bmw|i4": [
+    [2022, 2027, ["Electric"]],
+  ],
+  "bmw|i5": [
+    [2024, 2027, ["Electric"]],
+  ],
+  "bmw|i7": [
+    [2023, 2027, ["Electric"]],
+  ],
+  "bmw|x1": [
+    [2013, 2015, ["2.0L Turbo Inline 4-Cylinder"]],
+    [2016, 2022, ["2.0L Turbo Inline 4-Cylinder"]],
+    [2023, 2027, ["2.0L Turbo Inline 4-Cylinder"]],
+  ],
+  "bmw|x2": [
+    [2018, 2027, ["2.0L Turbo Inline 4-Cylinder"]],
+  ],
+  "bmw|x3": [
+    [2004, 2010, ["2.5L Inline 6-Cylinder", "3.0L Inline 6-Cylinder"]],
+    [2011, 2017, ["2.0L Turbo Inline 4-Cylinder", "3.0L Turbo Inline 6-Cylinder"]],
+    [2018, 2027, ["2.0L Turbo Inline 4-Cylinder", "3.0L Turbo Inline 6-Cylinder"]],
+  ],
+  "bmw|x4": [
+    [2015, 2027, ["2.0L Turbo Inline 4-Cylinder", "3.0L Turbo Inline 6-Cylinder"]],
+  ],
+  "bmw|x5": [
+    [2000, 2006, ["3.0L Inline 6-Cylinder", "4.4L V8", "4.8L V8"]],
+    [2007, 2013, ["3.0L Turbo Inline 6-Cylinder", "4.4L Twin-Turbo V8"]],
+    [2014, 2018, ["2.0L Turbo Inline 4-Cylinder", "3.0L Turbo Inline 6-Cylinder", "4.4L Twin-Turbo V8"]],
+    [2019, 2027, ["3.0L Turbo Inline 6-Cylinder", "4.4L Twin-Turbo V8"]],
+  ],
+  "bmw|x6": [
+    [2008, 2014, ["3.0L Turbo Inline 6-Cylinder", "4.4L Twin-Turbo V8"]],
+    [2015, 2019, ["3.0L Turbo Inline 6-Cylinder", "4.4L Twin-Turbo V8"]],
+    [2020, 2027, ["3.0L Turbo Inline 6-Cylinder", "4.4L Twin-Turbo V8"]],
+  ],
+  "bmw|x7": [
+    [2019, 2027, ["3.0L Turbo Inline 6-Cylinder", "4.4L Twin-Turbo V8"]],
+  ],
+  "bmw|ix": [
+    [2022, 2027, ["Electric"]],
+  ],
+  "bmw|xm": [
+    [2023, 2027, ["4.4L Twin-Turbo V8 Hybrid"]],
+  ],
   "bmw|5 series": [
     [1975, 1981, ["2.0L Inline 4-Cylinder", "2.8L Inline 6-Cylinder"]],
     [1982, 1988, ["2.5L Inline 6-Cylinder", "3.5L Inline 6-Cylinder"]],
@@ -1505,6 +1621,11 @@ const ENGINE_DB: Record<string, EngineEntry[]> = {
 
   // === BENTLEY ===
   "bentley|continental gt": [
+    [2003, 2018, ["6.0L Twin-Turbo W12", "4.0L Twin-Turbo V8"]],
+    [2019, 2027, ["6.0L Twin-Turbo W12", "4.0L Twin-Turbo V8"]],
+  ],
+  // NHTSA returns "Continental" without "GT" — alias
+  "bentley|continental": [
     [2003, 2018, ["6.0L Twin-Turbo W12", "4.0L Twin-Turbo V8"]],
     [2019, 2027, ["6.0L Twin-Turbo W12", "4.0L Twin-Turbo V8"]],
   ],

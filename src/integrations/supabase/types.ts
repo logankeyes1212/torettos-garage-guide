@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      marketplace_listings: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          photo_url: string | null
+          status: Database["public"]["Enums"]["listing_status"]
+          title: string
+          updated_at: string
+          user_id: string
+          vehicle_engine: string | null
+          vehicle_make: string | null
+          vehicle_model: string | null
+          vehicle_year: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          photo_url?: string | null
+          status?: Database["public"]["Enums"]["listing_status"]
+          title: string
+          updated_at?: string
+          user_id: string
+          vehicle_engine?: string | null
+          vehicle_make?: string | null
+          vehicle_model?: string | null
+          vehicle_year?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          photo_url?: string | null
+          status?: Database["public"]["Enums"]["listing_status"]
+          title?: string
+          updated_at?: string
+          user_id?: string
+          vehicle_engine?: string | null
+          vehicle_make?: string | null
+          vehicle_model?: string | null
+          vehicle_year?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -70,7 +115,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      listing_status: "active" | "sold" | "deleted"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -197,6 +242,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      listing_status: ["active", "sold", "deleted"],
+    },
   },
 } as const

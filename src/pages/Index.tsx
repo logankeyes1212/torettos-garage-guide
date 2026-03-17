@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import SplashScreen from "@/components/SplashScreen";
+import SpinningWheel from "@/components/SpinningWheel";
 import VehicleSelector from "@/components/VehicleSelector";
 import SearchBar from "@/components/SearchBar";
 import SearchResults from "@/components/SearchResults";
